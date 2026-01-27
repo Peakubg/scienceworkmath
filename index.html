@@ -1,0 +1,1889 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PEAK UBG — One Page</title>
+
+<meta name="description" content="PEAK UBG — neon dashboard, proxy hub, partners, and updates in a single page app." />
+<meta name="theme-color" content="#020308" />
+
+<!-- FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&display=swap" as="style" onload="this.rel='stylesheet'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
+</noscript>
+
+<style>
+  :root{
+    --bg-1:#1a1f2b;
+    --bg-2:#05060a;
+    --bg-3:#020308;
+    --accent:#00f2ff;
+    --accent-2:#9befff;
+    --glass: rgba(10,20,30,0.45);
+    --glass-strong: rgba(6,10,14,0.6);
+    --nav-width: 260px;
+    --nav-collapsed: 56px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:100%;min-height:100%;background:var(--bg-3);color:#e6faff;font-family:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+  body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding-bottom:40px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  .skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+  .skip-link:focus { left:12px; top:12px; width:auto; height:auto; padding:8px 12px; background:rgba(0,242,255,0.12); border-radius:6px; z-index:10000; color:#fff; text-decoration:none; }
+
+  :focus { outline: 3px solid rgba(0,242,255,0.6); outline-offset: 2px; }
+
+  #peak-root { position: relative; width:100%; min-height:100vh; display:flex; align-items:flex-start; }
+
+  /* STARFIELD & SCANLINES */
+  #peak-starfield { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at top, var(--bg-1) 0%, var(--bg-2) 55%, var(--bg-3) 100%); display:block; }
+  .peak-scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 1; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,242,255,0.04) 50%); background-size:100% 4px; mix-blend-mode:screen; opacity:0.7; }
+
+  /* Shell & App Area */
+  .shell { margin: 18px auto; width: calc(100% - 36px); max-width:1400px; position:relative; z-index:2; }
+  .app-inner { display:flex; gap:18px; align-items:flex-start; }
+
+  /* SIDE NAV (collapsible) */
+  #sideNav {
+    position:sticky;
+    top:18px;
+    z-index:130;
+    background: linear-gradient(180deg, rgba(2,3,8,0.7), rgba(2,3,8,0.5));
+    border: 1px solid rgba(0,242,255,0.12);
+    box-shadow: 0 12px 40px rgba(0,242,255,0.08);
+    border-radius: 14px;
+    padding: 12px;
+    width: var(--nav-width);
+    min-height: 160px;
+    transition: width 320ms cubic-bezier(.2,.9,.2,1);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:stretch;
+    backdrop-filter: blur(12px);
+  }
+
+  #sideNav.collapsed { 
+    width: var(--nav-collapsed); 
+    min-height: var(--nav-collapsed);
+    padding: 0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #sideNavHeader { display:flex; align-items:center; gap:10px; justify-content:space-between; padding:6px 2px; position:relative; }
+  #sideNav.collapsed #sideNavHeader { padding:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  
+  #sideNavHeader > div:first-child { display:flex; align-items:center; gap:10px; transition:opacity .18s; }
+  #sideNav.collapsed #sideNavHeader > div:first-child { display:none !important; }
+  
+  .peak-logo-svg { flex-shrink:0; }
+  
+  #sideNavHeader .nav-title { font-weight:900; letter-spacing:0.12em; color:#e6faff; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:opacity .18s; }
+  #sideNav.collapsed .nav-title { opacity:0; width:0; height:0; pointer-events:none; }
+  
+  #navToggle {
+    width:40px; height:40px; border-radius:50%; border:2px solid rgba(0,242,255,0.3); background: rgba(0,242,255,0.1); display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1); font-size:18px; color:#00f2ff; flex-shrink:0;
+  }
+  #navToggle:hover { transform: scale(1.15) rotate(180deg); background: rgba(0,242,255,0.2); border-color:rgba(0,242,255,0.6); box-shadow:0 0 25px rgba(0,242,255,0.5); }
+  #sideNav.collapsed #navToggle { transform:rotate(180deg); }
+  #sideNav.collapsed #navToggle:hover { transform:rotate(360deg) scale(1.2); }
+
+  .nav-items { display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+  #sideNav.collapsed .nav-items { display:none; }
+  
+  .nav-item {
+    display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:999px; cursor:pointer;
+    background: transparent; color:#e6faff; border:1px solid rgba(0,242,255,0.06); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; font-size:13px;
+    transition: all .2s ease;
+  }
+  .nav-item:hover { 
+    background: linear-gradient(90deg, rgba(0,242,255,0.08), rgba(0,242,255,0.04)); 
+    transform: translateX(4px); 
+    border-color: rgba(0,242,255,0.15);
+  }
+  .nav-item.active { 
+    background: linear-gradient(90deg, rgba(0,242,255,0.12), rgba(0,242,255,0.06)); 
+    border-color:rgba(0,242,255,0.25);
+    box-shadow: 0 0 15px rgba(0,242,255,0.2);
+  }
+
+  .nav-item svg { width:18px; height:18px; flex:0 0 18px; }
+
+  /* App content column */
+  .app-content { flex:1; min-width:0; position:relative; padding-bottom:36px; }
+
+  /* Settings button */
+  #settingsBtn { position:fixed; right:20px; top:20px; z-index:9998; width:48px; height:48px; border-radius:12px; background:rgba(0,0,0,0.6); border:1px solid rgba(0,242,255,0.3); display:inline-flex; align-items:center; justify-content:center; color:var(--accent-2); cursor:pointer; backdrop-filter:blur(8px); font-size:20px; transition:all .2s; box-shadow:0 4px 12px rgba(0,0,0,0.4); }
+  #settingsBtn:hover { transform:translateY(-2px) scale(1.05); background:rgba(0,0,0,0.7); border-color:rgba(0,242,255,0.6); box-shadow:0 6px 20px rgba(0,242,255,0.3); }
+
+  /* Settings panel */
+  #settingsPanel { position:fixed; right:20px; top:80px; z-index:9999; width:360px; max-width:calc(100% - 40px); background:var(--glass-strong); border-radius:14px; padding:16px; border:1px solid rgba(0,242,255,0.2); box-shadow:0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(0,242,255,0.1); display:none; backdrop-filter:blur(12px); }
+  #settingsPanel.open { display:block; }
+  .tabs { display:flex; gap:8px; margin-bottom:10px; }
+  .tab { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--accent-2); cursor:pointer; font-weight:700; }
+  .tab[aria-selected="true"] { background:rgba(0,242,255,0.06); border-color:rgba(0,242,255,0.12); color:#fff; }
+  .settings-body { max-height:420px; overflow:auto; padding:6px; }
+  .settings-row { display:flex; align-items:center; justify-content:space-between; padding:8px; border-radius:8px; }
+  .settings-row+.settings-row { margin-top:8px; }
+
+  /* LOADER */
+  #peak-loader { position: fixed; inset: 0; z-index: 9999; display:flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(2,3,8,0.98), rgba(2,3,8,0.95)); backdrop-filter: blur(4px); }
+  .loader-card { width: clamp(280px, 46vw, 420px); padding: 40px; border-radius: 14px; background: var(--glass-strong); border: 1px solid rgba(0,242,255,0.2); box-shadow: 0 12px 40px rgba(0,242,255,0.1); display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; }
+
+  /* SECTION SYSTEM */
+  .sections { position:relative; width:100%; min-height:60vh; display:block; padding-top:6px; }
+  .section { position: absolute; inset: 0 auto auto 0; width:100%; opacity:0; transform: translateY(12px) scale(.995); pointer-events:none; transition: opacity 420ms cubic-bezier(.2,.9,.2,1), transform 420ms cubic-bezier(.2,.9,.2,1); z-index:2; padding-top:26px; }
+  .section.active { opacity:1; transform: translateY(0) scale(1); pointer-events:auto; }
+
+  /* DASHBOARD */
+  .peak-dashboard { display:flex; flex-direction:column; gap:20px; width:100%; max-width:1400px; margin:auto; }
+  .peak-card { background: var(--glass); border-radius: 18px; padding: 25px; border: 2px solid rgba(0, 242, 255, 0.35); box-shadow: 0 0 20px rgba(0,242,255,0.25), inset 0 0 20px rgba(0,242,255,0.15); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); min-height: 160px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; transition: all .3s ease; }
+  .peak-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 0 40px rgba(0,242,255,0.9), 0 15px 40px rgba(0,0,0,0.3); border-color: rgba(0,242,255,0.9); }
+  .peak-logo-svg { width: 100px; height: 100px; fill: #ffffff; margin-bottom: 5px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); animation: logo-pulse 3s ease-in-out infinite; }
+  @keyframes logo-pulse { 0%, 100% { filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); } 50% { filter: drop-shadow(0 0 25px rgba(0,242,255,0.6)); } }
+  .peak-title { font-size: clamp(40px, 5vw, 64px); letter-spacing: 0.15em; text-transform: uppercase; color: #e6faff; text-shadow: 0 0 20px rgba(0,242,255,0.9), 0 0 40px rgba(0,242,255,0.6); animation: flicker 5s linear infinite; font-weight:900; }
+  @keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100%{opacity:1; text-shadow: 0 0 20px rgba(0,242,255,0.9), 0 0 40px rgba(0,242,255,0.6);} 20%,22%,55%{opacity:0.8; text-shadow: 0 0 10px rgba(0,242,255,0.5);} }
+
+  .peak-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap:22px; width:100%; align-items:stretch; }
+  .peak-card-main { font-size: clamp(28px, 3vw, 48px); font-weight:800; color:#fff; }
+  .peak-card-sub { font-size: clamp(16px, 2vw, 24px); color:var(--accent-2); margin-top:10px; }
+
+  .info-icon { width:28px;height:28px;fill:var(--accent-2); filter:drop-shadow(0 0 6px rgba(0,242,255,0.12)); }
+
+  /* UPDATES */
+  .updates-card { background: rgba(10,20,30,0.45); border-radius: 24px; padding: 40px; border: 3px solid rgba(0,242,255,0.35); box-shadow: 0 0 30px rgba(0,242,255,0.25), inset 0 0 30px rgba(0,242,255,0.15); }
+  .updates-title { font-size: clamp(36px,6vw,80px); letter-spacing: 0.2em; text-transform: uppercase; color: #e6faff; text-shadow: 0 0 30px rgba(0,242,255,0.9); text-align:center; font-weight:900; margin-bottom:10px; }
+  .update-entry { border-left: 10px solid var(--accent); padding-left: 40px; margin-bottom: 28px; }
+  .update-date { font-size: 28px; font-weight:900; color:var(--accent); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; display:block; }
+  .update-body { font-size:18px; line-height:1.45; color:#e6faff; }
+  .back-btn { display:inline-block; padding:14px 28px; border-radius:999px; border:2px solid var(--accent); background:rgba(0,242,255,0.12); color:#fff; cursor:pointer; font-size:16px; font-weight:900; text-transform:uppercase; transition:0.3s ease; }
+
+  /* PROXY HUB */
+  .peak-link { background:rgba(0,242,255,0.06); border:1px solid rgba(0,242,255,0.15); color:var(--accent-2); padding:8px 10px; border-radius:8px; cursor:pointer; transition:all .2s ease; }
+  .peak-link:hover { background:rgba(0,242,255,0.12); border-color:rgba(0,242,255,0.3); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,242,255,0.2); }
+  .search-bar { display:flex; gap:8px; align-items:center; width:100%; max-width:760px; margin-top:6px; }
+  .search-bar input[type="search"] { flex:1; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color:#e6faff; font-size:16px; }
+
+  .hub-grid { margin-top:12px; display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:18px; align-items:stretch; }
+  @media (max-width:900px) { .hub-grid { grid-template-columns: 1fr; } }
+
+  .peak-card.small { padding:18px; border-radius:14px; min-height:160px; }
+  .peak-card.favorite { border-color: rgba(255,200,50,0.9); box-shadow: 0 12px 36px rgba(255,200,50,0.06); }
+
+  .proxy-header { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; }
+  .proxy-title { font-weight:900; font-size:18px; color:#fff; }
+  .proxy-sub { font-size:13px; color:var(--accent-2); opacity:0.95; }
+
+  .proxy-actions { display:flex; gap:8px; align-items:center; }
+  .proxy-toggle { appearance:none;border:none;cursor:pointer;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg, rgba(0,242,255,0.1), rgba(0,242,255,0.05)); color:#cffeff; border:1px solid rgba(0,242,255,0.2); font-weight:700; transition:all .2s ease; }
+  .proxy-toggle:hover { background:linear-gradient(90deg, rgba(0,242,255,0.2), rgba(0,242,255,0.1)); transform:scale(1.05); box-shadow:0 4px 12px rgba(0,242,255,0.3); }
+  .fav-btn { font-size:18px; padding:8px 10px; border-radius:10px; cursor:pointer; background:rgba(255,216,107,0.08); color:#ffd86b; border:1px solid rgba(255,216,107,0.2); transition:all .2s ease; }
+  .fav-btn.inactive { color:#cfeaff; background:rgba(207,234,255,0.04); border-color:rgba(207,234,255,0.1); }
+  .fav-btn:hover { transform:scale(1.15) rotate(10deg); box-shadow:0 0 15px rgba(255,216,107,0.4); }
+
+  .links-panel { overflow:hidden; transition: max-height .26s cubic-bezier(.2,.9,.2,1), opacity .2s; max-height: 0; opacity: 0; margin-top:12px; }
+  .links-panel.open { opacity: 1; max-height: 640px; }
+
+  .link-item { display:flex; gap:8px; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:10px; background: rgba(0,242,255,0.03); border:1px solid rgba(0,242,255,0.04); margin-top:10px; }
+  .link-left { display:flex; gap:8px; align-items:flex-start; flex-direction:column; max-width:70%; }
+  .link-text { color:#e6faff; font-weight:800; font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .link-url { color:var(--accent-2); font-size:13px; word-break:break-all; opacity:0.95; }
+
+  .link-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .icon-btn { appearance:none;border:none;cursor:pointer;padding:7px 12px;border-radius:8px;background:rgba(0,242,255,0.06);color:#cffeff;border:1px solid rgba(0,242,255,0.15);font-weight:700;font-size:13px;transition:all .2s ease; }
+  .icon-btn:hover { background:rgba(0,242,255,0.12); transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,242,255,0.25); }
+  .card-footer { margin-top:auto; font-size:13px; color:var(--accent-2); opacity:0.9; }
+
+  .vote-btn { padding:7px 12px; border-radius:8px; border:1px solid rgba(0,242,255,0.15); cursor:pointer; background:rgba(0,242,255,0.04); color:#9befff; font-weight:700; font-size:12px; transition:all .2s ease; }
+  .vote-btn:hover { background:rgba(0,242,255,0.1); transform:translateY(-1px); box-shadow:0 4px 10px rgba(0,242,255,0.15); }
+  .vote-btn.voted { box-shadow: 0 0 15px rgba(0,242,255,0.3); background:linear-gradient(90deg, rgba(0,242,255,0.18), rgba(0,242,255,0.1)); color:#00f2ff; border-color:rgba(0,242,255,0.4); font-weight:900; }
+  .vote-count { font-size:13px; color:var(--accent-2); min-width:64px; text-align:center; padding-left:6px; font-weight:700; }
+
+  /* PARTNERS */
+  .partners-grid { margin-top:6px; display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:18px; align-items:stretch; }
+  .partner-card { background: rgba(10,20,30,0.45); border-radius:14px; padding:14px; border:1px solid rgba(0,242,255,0.18); box-shadow: 0 6px 22px rgba(0,242,255,0.04); display:flex; flex-direction:column; gap:10px; align-items:center; text-align:center; transition: transform .18s ease; min-height:160px; }
+  .partner-logo { width:88px; height:88px; object-fit:contain; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent); border:1px solid rgba(255,255,255,0.02); padding:8px; box-shadow: 0 6px 18px rgba(0,0,0,0.4); }
+  .partner-name { font-weight:700; font-size:16px; color:#fff; margin-top:6px; }
+  .partner-desc { font-size:13px; color:var(--accent-2); opacity:0.9; }
+  .partner-actions a { text-decoration:none; display:inline-flex; align-items:center; justify-content:center; padding:8px 12px; border-radius:10px; background:rgba(0,242,255,0.06); color:#cffeff; border:1px solid rgba(0,242,255,0.12); font-weight:700; }
+
+  /* Custom cursor */
+  @media (pointer: fine) {
+    body.custom-cursor-enabled, body.custom-cursor-enabled * { cursor: none !important; }
+    body.custom-cursor-enabled input, body.custom-cursor-enabled textarea, body.custom-cursor-enabled select { cursor: text !important; }
+    .custom-cursor { position: fixed; left: 50%; top: 50%; width: 36px; height: 36px; pointer-events: none; z-index: 100000; transform: translate(-50%,-50%); mix-blend-mode: screen; transition: opacity .12s linear; display:block; opacity:0; }
+    .custom-cursor .dot { width:8px;height:8px;border-radius:50%; background:var(--accent); box-shadow: 0 0 10px rgba(0,242,255,0.9), 0 0 24px rgba(0,242,255,0.18); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
+    .custom-cursor .ring { width:28px;height:28px;border-radius:50%; border:1px solid rgba(0,242,255,0.6); box-shadow: 0 0 8px rgba(0,242,255,0.25); position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); transition: transform 180ms cubic-bezier(.2,.9,.2,1), opacity 180ms; opacity:0.95; }
+    .custom-cursor.cursor-click .ring { transform: translate(-50%,-50%) scale(0.78); opacity:0.6; }
+    .custom-cursor.cursor-hover .ring { transform: translate(-50%,-50%) scale(1.45); opacity:0.98; }
+  }
+  @media (hover: none), (pointer: coarse) { .custom-cursor { display:none !important; } body { cursor: auto; } }
+
+  /* Notification toast */
+  .toast-notification { position:fixed; top:80px; right:20px; z-index:10000; background:var(--glass-strong); border:1px solid rgba(0,242,255,0.3); border-radius:12px; padding:16px 20px; min-width:250px; box-shadow:0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(0,242,255,0.2); backdrop-filter:blur(12px); transform:translateX(400px); opacity:0; transition:all .3s ease; }
+  .toast-notification.show { transform:translateX(0); opacity:1; }
+  .toast-notification.success { border-color:rgba(0,255,150,0.3); }
+  .toast-notification.error { border-color:rgba(255,50,50,0.3); }
+
+  /* Keyboard shortcuts overlay */
+  .shortcuts-overlay { position:fixed; inset:0; z-index:9997; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); display:none; align-items:center; justify-content:center; }
+  .shortcuts-overlay.show { display:flex; }
+  .shortcuts-panel { background:var(--glass-strong); border:2px solid rgba(0,242,255,0.3); border-radius:20px; padding:30px; max-width:600px; width:90%; box-shadow:0 20px 80px rgba(0,0,0,0.8), 0 0 40px rgba(0,242,255,0.3); }
+  .shortcuts-title { font-size:28px; font-weight:900; color:#00f2ff; text-align:center; margin-bottom:20px; letter-spacing:0.1em; text-shadow:0 0 20px rgba(0,242,255,0.5); }
+  .shortcut-item { display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid rgba(0,242,255,0.1); }
+  .shortcut-key { background:rgba(0,242,255,0.15); border:1px solid rgba(0,242,255,0.3); padding:6px 12px; border-radius:6px; font-family:monospace; font-weight:700; color:#00f2ff; }
+  .shortcut-desc { color:#9befff; font-size:14px; }
+
+  /* Theme styles */
+  body.theme-dark { --bg-1:#1a1f2b; --bg-2:#05060a; --bg-3:#020308; }
+  body.theme-neon { --bg-1:#0a1628; --bg-2:#020815; --bg-3:#000508; }
+  body.theme-light { --bg-1:#2a3f5b; --bg-2:#1a2f4a; --bg-3:#0f1f35; }
+
+  /* responsive */
+  @media (max-width:820px) {
+    #sideNav { position: fixed; left: 50%; transform: translateX(-50%); bottom: 12px; top: auto; width: min(92%, 760px); height: var(--nav-collapsed); display:flex; flex-direction:row; align-items:center; padding:8px; border-radius:12px; }
+    #sideNav.collapsed { width: min(92%, 760px); }
+    .nav-items { flex-direction:row; gap:8px; overflow:auto; padding:0 6px; display:flex !important; }
+    .nav-item { white-space:nowrap; padding:8px 12px; border-radius:999px; }
+    .app-inner { margin-left:0; }
+  }
+</style>
+</head>
+<body>
+  <a href="#peak-app" class="skip-link">Skip to content</a>
+
+  <div id="peak-root">
+    <canvas id="peak-starfield" aria-hidden="true"></canvas>
+    <div class="peak-scanlines" aria-hidden="true"></div>
+
+    <div class="shell">
+      <div class="app-inner">
+        <!-- Side Navigation -->
+        <nav id="sideNav" aria-label="Primary Navigation">
+          <div id="sideNavHeader">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <svg class="peak-logo-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="width:44px;height:44px;">
+                <path d="M50 15 L90 85 L10 85 Z"></path>
+              </svg>
+              <div class="nav-title" id="navTitle">PEAK UBG</div>
+            </div>
+            <button id="navToggle" aria-label="Collapse navigation" title="Toggle navigation">▾</button>
+          </div>
+
+          <div class="nav-items" role="list">
+            <div class="nav-item active" data-section="dashboard" role="listitem" tabindex="0" title="Dashboard">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 13h8V3H3v10zM13 21h8V11h-8v10zM13 3v6h8V3h-8zM3 21h8v-6H3v6z" fill="currentColor" /></svg>
+              <span class="nav-label">Dashboard</span>
+            </div>
+
+            <div class="nav-item" data-section="hub" role="listitem" tabindex="0" title="Proxy Hub">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2l2.5 5.5L20 8l-4 3.5L17 17l-5-2.5L7 17l1-5.5L4 8l5.5-.5L12 2z" fill="currentColor" /></svg>
+              <span class="nav-label">Proxy Hub</span>
+            </div>
+
+            <div class="nav-item" data-section="partners" role="listitem" tabindex="0" title="Partners">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM2 20c0-3.3 4.4-5 10-5s10 1.7 10 5v1H2v-1z" fill="currentColor"/></svg>
+              <span class="nav-label">Partners</span>
+            </div>
+
+            <div class="nav-item" data-section="updates" role="listitem" tabindex="0" title="Updates">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 8v5l4 2 1-1.7-3-1.5V8zM20 6v8c0 4.4-4 8-8 8s-8-3.6-8-8V6h16z" fill="currentColor"/></svg>
+              <span class="nav-label">Updates</span>
+            </div>
+
+            <div class="nav-item" data-section="tools" role="listitem" tabindex="0" title="Tools">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/></svg>
+              <span class="nav-label">Tools</span>
+            </div>
+
+            <div class="nav-item" id="discordNav" role="listitem" tabindex="0" title="Discord">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7h10v1H7zM7 10h10v1H7z" fill="currentColor"/></svg>
+              <span class="nav-label">Discord</span>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Application Content -->
+        <main class="app-content" id="peak-app" role="main" aria-labelledby="appTitle">
+          <!-- Settings button -->
+          <button id="settingsBtn" aria-haspopup="dialog" aria-expanded="false" title="Settings">⚙</button>
+
+          <!-- Settings panel -->
+          <div id="settingsPanel" role="dialog" aria-hidden="true" aria-label="Settings panel">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:#e6faff">Settings</strong>
+              <div style="display:flex;gap:8px">
+                <button id="resetPrefs" class="peak-link" title="Reset preferences">Reset</button>
+                <button id="closeSettings" class="peak-link" title="Close">✕</button>
+              </div>
+            </div>
+
+            <div class="tabs" role="tablist" aria-label="Settings tabs" style="margin-top:8px">
+              <button class="tab" role="tab" aria-selected="true" data-tab="general">General</button>
+              <button class="tab" role="tab" aria-selected="false" data-tab="appearance">Appearance</button>
+            </div>
+
+            <div class="settings-body">
+              <div class="settings-page" data-page="general">
+                <div class="settings-row">
+                  <div class="settings-label">Custom Cursor</div>
+                  <div class="settings-control"><button id="cursorToggle" class="peak-link" aria-pressed="true">On</button></div>
+                </div>
+
+                <div class="settings-row">
+                  <div class="settings-label">Collapse Sidebar</div>
+                  <div class="settings-control"><button id="navCollapseToggle" class="peak-link">Toggle</button></div>
+                </div>
+
+                <div class="settings-row">
+                  <div class="settings-label">Reduce Motion</div>
+                  <div class="settings-control"><button id="reduceMotionToggle" class="peak-link" aria-pressed="false">Off</button></div>
+                </div>
+              </div>
+
+              <div class="settings-page" data-page="appearance" hidden>
+                <div class="settings-row">
+                  <div class="settings-label">Theme</div>
+                  <div class="settings-control"><select id="themeSelect"><option value="theme-dark">Dark</option><option value="theme-neon">Neon</option><option value="theme-light">Light</option></select></div>
+                </div>
+
+                <div class="settings-row">
+                  <div class="settings-label">Accent</div>
+                  <div class="settings-control"><input id="accentColor" type="color" value="#00f2ff"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loader -->
+          <div id="peak-loader" role="status" aria-live="polite" aria-label="Loading">
+            <div class="loader-card">
+              <svg class="peak-logo-svg" viewBox="0 0 100 100" style="width:80px;height:80px;animation:logo-pulse 2s ease-in-out infinite;">
+                <path d="M50 15 L90 85 L10 85 Z"></path>
+              </svg>
+              <div style="font-weight:900;letter-spacing:.12em;font-size:24px;color:#00f2ff;">PEAK UBG</div>
+              <div style="margin-top:8px;font-size:14px;color:var(--accent-2);">Loading interface...</div>
+            </div>
+          </div>
+
+          <!-- Sections container -->
+          <div class="sections" id="sections" aria-live="polite">
+
+            <!-- DASHBOARD -->
+            <section id="section-dashboard" class="section active" role="region" aria-labelledby="dashboardHeading">
+              <div class="peak-dashboard" aria-labelledby="dashboardHeading">
+                <h2 id="dashboardHeading" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Dashboard</h2>
+
+                <div class="peak-card" style="min-height:300px;" aria-label="Logo and title">
+                  <svg class="peak-logo-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                    <path d="M50 15 L90 85 L10 85 Z"></path>
+                    <path d="M35 55 L60 85 L10 85 Z" opacity="0.7"></path>
+                    <path d="M50 15 L62 36 L50 30 L38 36 Z" fill="#1a1f2b"></path>
+                  </svg>
+                  <div class="peak-title">PEAK UBG</div>
+                </div>
+
+                <div class="peak-grid" role="list">
+                  <div class="peak-card" role="region" aria-labelledby="clockLabel" aria-label="Clock">
+                    <div id="clock" class="peak-card-main">--:--:--</div>
+                    <div id="date" class="peak-card-sub">Loading...</div>
+                  </div>
+
+                  <div class="peak-card" role="region" aria-labelledby="batteryLabel" aria-label="Battery">
+                    <div id="battery" class="peak-card-main">--%</div>
+                    <div id="batteryStatus" class="peak-card-sub">Checking...</div>
+                  </div>
+
+                  <div class="peak-card" role="region" aria-label="Status and news">
+                    <div class="peak-card-main" id="news" aria-live="polite">Syncing System...</div>
+                    <div class="peak-card-sub">Status</div>
+                  </div>
+
+                  <div class="peak-card" role="region" aria-label="Information">
+                    <div class="peak-card-main">Info</div>
+                    <div class="peak-card-sub">Staff</div>
+
+                    <div style="display:flex;flex-direction:column;gap:8px;align-items:center;margin-top:14px;">
+                      <div style="font-weight:900;font-size:18px;display:flex;gap:8px;align-items:center;">
+                        <svg class="info-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 9a1 1 0 110 2 1 1 0 010-2zm1 6h-2v-6h2v6z"></path>
+                        </svg>
+                      </div>
+                      <div style="font-size:13px;color:var(--accent-2);opacity:0.95;">only one dev rn so slow updates</div>
+                    </div>
+
+                    <div style="margin-top:12px;font-size:12px;color:var(--accent-2);opacity:0.9">Contact: peakubg@gmail.com</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- PROXY HUB -->
+            <section id="section-hub" class="section" role="region" aria-labelledby="hubHeading" aria-hidden="true">
+              <div class="peak-dashboard">
+                <h2 id="hubHeading" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Proxy Hub</h2>
+
+                <div class="top-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+                  <div style="display:flex;gap:12px;align-items:center;">
+                    <svg class="peak-logo-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="width:60px;height:60px;"><path d="M50 15 L90 85 L10 85 Z"></path></svg>
+                    <div>
+                      <div style="font-weight:900;font-size:24px;color:#fff;display:flex;align-items:center;gap:10px;">
+                        Proxy Hub
+                        <span id="proxyCount" style="font-size:14px;color:var(--accent-2);font-weight:600;background:rgba(0,242,255,0.1);padding:4px 10px;border-radius:20px;border:1px solid rgba(0,242,255,0.2);">0 proxies</span>
+                      </div>
+                      <div class="search-bar" style="margin-top:10px;">
+                        <input id="searchInput" type="search" placeholder="Search proxies..." aria-label="Search proxies" />
+                        <button id="clearSearch" title="Clear search" class="peak-link">Clear</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex;gap:8px;">
+                    <button id="exportVotesBtn" class="peak-link" title="Export votes">Export Votes</button>
+                    <button id="hub-back" class="peak-link" title="Back to dashboard">Back</button>
+                    <button id="open-partners-from-hub" class="peak-link" title="Partners">Partners</button>
+                  </div>
+                </div>
+
+                <div class="hub-grid" id="hubGrid" role="list" aria-live="polite" style="margin-top:12px;">
+                  <!-- Proxy cards injected via JS -->
+                </div>
+              </div>
+            </section>
+
+            <!-- PARTNERS -->
+            <section id="section-partners" class="section" role="region" aria-labelledby="partnersHeading" aria-hidden="true">
+              <div class="peak-dashboard">
+                <h2 id="partnersHeading" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Partners</h2>
+
+                <div class="top-row" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+                  <div style="display:flex;gap:12px;align-items:center;">
+                    <svg class="peak-logo-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="width:60px;height:60px;">
+                      <path d="M50 15 L90 85 L10 85 Z"></path>
+                    </svg>
+                    <div style="font-weight:900;font-size:24px;color:#fff;">Partners</div>
+                  </div>
+
+                  <div>
+                    <button id="partners-back" class="peak-link" title="Back to dashboard">Back</button>
+                  </div>
+                </div>
+
+                <div id="partnersGrid" class="partners-grid" role="list" aria-live="polite" style="margin-top:12px;">
+                  <!-- Partners injected by JS -->
+                </div>
+              </div>
+            </section>
+
+            <!-- UPDATES -->
+            <section id="section-updates" class="section" role="region" aria-labelledby="updatesHeading" aria-hidden="true">
+              <div class="updates-dashboard" style="max-width:1200px;margin:0 auto;">
+                <h2 id="updatesHeading" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Updates</h2>
+
+                <div class="updates-card" style="display:flex;flex-direction:column;align-items:center;">
+                  <svg class="updates-logo-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="width:120px;height:120px;fill:#fff;margin-bottom:8px;">
+                    <path d="M50 15 L90 85 L10 85 Z" />
+                    <path d="M35 55 L60 85 L10 85 Z" opacity="0.7" />
+                    <path d="M50 15 L62 36 L50 30 L38 36 Z" fill="#1a1f2b" />
+                  </svg>
+                  <div class="updates-title">PEAK UPDATES</div>
+                </div>
+
+                <div class="updates-card" style="margin-top:12px;">
+                  <div class="update-entry">
+                    <span class="update-date">January 2026</span>
+                    <div class="update-body">
+                      <b>SYSTEM DEPLOYMENT:</b> The release of Peak UBG is officially live! Hooray! <br><br>
+                      <i>Hi Gavin. hi joey</i>
+                    </div>
+                  </div>
+
+                  <div style="text-align:center;margin-top:8px;">
+                    <button id="updates-back" class="back-btn" type="button">Return to Dashboard</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- TOOLS -->
+            <section id="section-tools" class="section" role="region" aria-labelledby="toolsHeading" aria-hidden="true">
+              <div class="peak-dashboard">
+                <h2 id="toolsHeading" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">School Tools</h2>
+
+                <div class="top-row" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;">
+                  <div style="display:flex;gap:12px;align-items:center;">
+                    <svg class="peak-logo-svg" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style="width:60px;height:60px;">
+                      <path d="M50 15 L90 85 L10 85 Z"></path>
+                    </svg>
+                    <div style="font-weight:900;font-size:24px;color:#fff;">School Tools</div>
+                  </div>
+                  <div>
+                    <button id="tools-back" class="peak-link" title="Back to dashboard">Back</button>
+                  </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;">
+                  
+                  <!-- Timer Tool -->
+                  <div class="peak-card" style="min-height:300px;">
+                    <div style="width:100%;">
+                      <h3 style="font-size:20px;font-weight:900;color:#00f2ff;margin-bottom:15px;display:flex;align-items:center;gap:8px;">
+                        ⏱️ Timer
+                      </h3>
+                      <div id="timerDisplay" style="font-size:48px;font-weight:900;color:#fff;margin:20px 0;font-family:monospace;text-shadow:0 0 20px rgba(0,242,255,0.6);">00:00</div>
+                      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:15px;">
+                        <button id="timerStart" class="peak-link" style="flex:1;min-width:80px;">Start</button>
+                        <button id="timerPause" class="peak-link" style="flex:1;min-width:80px;">Pause</button>
+                        <button id="timerReset" class="peak-link" style="flex:1;min-width:80px;">Reset</button>
+                      </div>
+                      <div style="margin-top:15px;display:flex;gap:8px;align-items:center;justify-content:center;">
+                        <input id="timerMinutes" type="number" min="0" max="99" value="5" style="width:60px;padding:8px;text-align:center;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.05);border-radius:8px;" placeholder="Min">
+                        <span style="color:#9befff;">:</span>
+                        <input id="timerSeconds" type="number" min="0" max="59" value="0" style="width:60px;padding:8px;text-align:center;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.05);border-radius:8px;" placeholder="Sec">
+                        <button id="timerSet" class="peak-link">Set</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Calculator Tool -->
+                  <div class="peak-card" style="min-height:300px;">
+                    <div style="width:100%;">
+                      <h3 style="font-size:20px;font-weight:900;color:#00f2ff;margin-bottom:15px;display:flex;align-items:center;gap:8px;">
+                        🔢 Calculator
+                      </h3>
+                      <input id="calcDisplay" type="text" readonly style="width:100%;padding:15px;font-size:24px;text-align:right;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.05);border-radius:8px;margin-bottom:10px;font-family:monospace;color:#fff;" value="0">
+                      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+                        <button class="calc-btn peak-link" data-value="7">7</button>
+                        <button class="calc-btn peak-link" data-value="8">8</button>
+                        <button class="calc-btn peak-link" data-value="9">9</button>
+                        <button class="calc-btn peak-link" data-value="/" style="background:rgba(0,242,255,0.15);">÷</button>
+                        <button class="calc-btn peak-link" data-value="4">4</button>
+                        <button class="calc-btn peak-link" data-value="5">5</button>
+                        <button class="calc-btn peak-link" data-value="6">6</button>
+                        <button class="calc-btn peak-link" data-value="*" style="background:rgba(0,242,255,0.15);">×</button>
+                        <button class="calc-btn peak-link" data-value="1">1</button>
+                        <button class="calc-btn peak-link" data-value="2">2</button>
+                        <button class="calc-btn peak-link" data-value="3">3</button>
+                        <button class="calc-btn peak-link" data-value="-" style="background:rgba(0,242,255,0.15);">−</button>
+                        <button class="calc-btn peak-link" data-value="0">0</button>
+                        <button class="calc-btn peak-link" data-value=".">.</button>
+                        <button class="calc-btn peak-link" data-value="=" style="background:rgba(0,242,255,0.2);">=</button>
+                        <button class="calc-btn peak-link" data-value="+" style="background:rgba(0,242,255,0.15);">+</button>
+                        <button class="calc-btn peak-link" data-value="C" style="grid-column:span 2;background:rgba(255,50,50,0.2);">Clear</button>
+                        <button class="calc-btn peak-link" data-value="back" style="grid-column:span 2;background:rgba(255,150,0,0.2);">⌫</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Stopwatch Tool -->
+                  <div class="peak-card" style="min-height:300px;">
+                    <div style="width:100%;">
+                      <h3 style="font-size:20px;font-weight:900;color:#00f2ff;margin-bottom:15px;display:flex;align-items:center;gap:8px;">
+                        ⏲️ Stopwatch
+                      </h3>
+                      <div id="stopwatchDisplay" style="font-size:48px;font-weight:900;color:#fff;margin:20px 0;font-family:monospace;text-shadow:0 0 20px rgba(0,242,255,0.6);">00:00:00</div>
+                      <div style="display:flex;gap:10px;justify-content:center;margin-top:15px;">
+                        <button id="stopwatchStart" class="peak-link" style="flex:1;">Start</button>
+                        <button id="stopwatchLap" class="peak-link" style="flex:1;">Lap</button>
+                        <button id="stopwatchReset" class="peak-link" style="flex:1;">Reset</button>
+                      </div>
+                      <div id="lapTimes" style="margin-top:15px;max-height:100px;overflow-y:auto;font-size:12px;color:#9befff;"></div>
+                    </div>
+                  </div>
+
+                  <!-- Unit Converter -->
+                  <div class="peak-card" style="min-height:300px;">
+                    <div style="width:100%;">
+                      <h3 style="font-size:20px;font-weight:900;color:#00f2ff;margin-bottom:15px;display:flex;align-items:center;gap:8px;">
+                        📐 Unit Converter
+                      </h3>
+                      <select id="unitType" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.05);border-radius:8px;color:#fff;">
+                        <option value="length">Length</option>
+                        <option value="weight">Weight</option>
+                        <option value="temperature">Temperature</option>
+                      </select>
+                      <input id="unitInput" type="number" value="1" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.05);border-radius:8px;color:#fff;">
+                      <select id="unitFrom" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.05);border-radius:8px;color:#fff;">
+                        <option value="m">Meters</option>
+                        <option value="km">Kilometers</option>
+                        <option value="ft">Feet</option>
+                        <option value="mi">Miles</option>
+                      </select>
+                      <div style="text-align:center;margin:10px 0;color:#00f2ff;font-size:20px;">⬇</div>
+                      <select id="unitTo" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid rgba(0,242,255,0.3);background:rgba(0,242,255,0.05);border-radius:8px;color:#fff;">
+                        <option value="m">Meters</option>
+                        <option value="km">Kilometers</option>
+                        <option value="ft">Feet</option>
+                        <option value="mi">Miles</option>
+                      </select>
+                      <div id="unitResult" style="font-size:24px;font-weight:700;color:#00f2ff;text-align:center;padding:15px;background:rgba(0,242,255,0.05);border-radius:8px;">1 m</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+          </div> <!-- sections -->
+        </main>
+      </div> <!-- app-inner -->
+    </div> <!-- shell -->
+  </div> <!-- root -->
+
+  <!-- Custom Cursor Element -->
+  <div class="custom-cursor" id="customCursor" aria-hidden="true">
+    <div class="ring"></div>
+    <div class="dot"></div>
+  </div>
+
+  <!-- Keyboard Shortcuts Overlay -->
+  <div class="shortcuts-overlay" id="shortcutsOverlay">
+    <div class="shortcuts-panel">
+      <div class="shortcuts-title">⌨️ KEYBOARD SHORTCUTS</div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Dashboard</span>
+        <span class="shortcut-key">H</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Proxy Hub</span>
+        <span class="shortcut-key">P</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Tools</span>
+        <span class="shortcut-key">T</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Partners</span>
+        <span class="shortcut-key">R</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Updates</span>
+        <span class="shortcut-key">U</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Discord</span>
+        <span class="shortcut-key">D</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Toggle Sidebar</span>
+        <span class="shortcut-key">S</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Settings</span>
+        <span class="shortcut-key">,</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="shortcut-desc">Show Shortcuts</span>
+        <span class="shortcut-key">?</span>
+      </div>
+      <div style="text-align:center; margin-top:20px;">
+        <button class="peak-link" onclick="document.getElementById('shortcutsOverlay').classList.remove('show')">Close</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function el(tag, cls){ const e = document.createElement(tag); if (cls) e.className = cls; return e; }
+
+/* ========= Toast Notification System ========= */
+function showToast(message, type = 'info', duration = 3000) {
+  const toast = el('div', 'toast-notification');
+  if (type === 'success') toast.classList.add('success');
+  if (type === 'error') toast.classList.add('error');
+  toast.innerHTML = `<div style="display:flex;align-items:center;gap:10px;color:#e6faff;font-weight:700;">
+    ${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'} 
+    <span>${message}</span>
+  </div>`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+/* ========= Simple Working Loader ========= */
+(function simpleLoader(){
+  const loader = document.getElementById('peak-loader');
+  if (!loader) return;
+  
+  // Just hide it after a short delay - no fancy animations
+  function hideLoader() {
+    loader.style.transition = 'opacity 0.5s ease';
+    loader.style.opacity = '0';
+    setTimeout(() => {
+      if (loader && loader.parentNode) {
+        loader.style.display = 'none';
+        loader.remove();
+      }
+    }, 500);
+  }
+  
+  // Hide immediately when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 500));
+  } else {
+    setTimeout(hideLoader, 500);
+  }
+  
+  // Backup: force hide after 2 seconds no matter what
+  setTimeout(hideLoader, 2000);
+})();
+
+/* ========= Starfield ========= */
+(function initStarfield() {
+  const canvas = $('#peak-starfield');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+  const stars = [];
+  const count = Math.max(40, Math.floor((width * height) / 9000));
+  function rnd(a,b){ return a + Math.random()*(b-a); }
+  for (let i=0;i<count;i++){
+    const color = Math.random() < 0.6 ? 'rgba(255,255,255,' : 'rgba(0,242,255,';
+    stars.push({x:Math.random()*width,y:Math.random()*height,r:rnd(0.4,1.6),s:rnd(0.01,0.07),c:color,t:Math.random()*Math.PI*2});
+  }
+  window.addEventListener('resize', ()=>{ width=canvas.width=window.innerWidth; height=canvas.height=window.innerHeight; });
+  (function frame(){
+    ctx.clearRect(0,0,width,height);
+    for (let i=0;i<stars.length;i++){
+      const s=stars[i];
+      s.y += s.s * (1 + s.r*0.5);
+      if (s.y > height + 10) { s.y = -10; s.x = Math.random()*width; }
+      s.t += 0.03 + s.r*0.01;
+      const a = 0.4 + Math.sin(s.t)*0.45;
+      ctx.beginPath();
+      ctx.fillStyle = s.c + a + ')';
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  })();
+})();
+
+/* ========= Navigation ========= */
+const sideNav = $('#sideNav');
+const navToggle = $('#navToggle');
+const navItems = $$('.nav-item');
+const sections = {
+  dashboard: $('#section-dashboard'),
+  hub: $('#section-hub'),
+  partners: $('#section-partners'),
+  updates: $('#section-updates'),
+  tools: $('#section-tools')
+};
+let currentSection = 'dashboard';
+let navCollapsed = false;
+
+function setNavCollapsed(collapsed, animate = true) {
+  navCollapsed = !!collapsed;
+  sideNav.classList.toggle('collapsed', navCollapsed);
+  const navList = $('.nav-items');
+  if (navList) navList.setAttribute('aria-hidden', navCollapsed ? 'true' : 'false');
+  try { localStorage.setItem('peak-nav-collapsed-v1', navCollapsed ? '1' : '0'); } catch(e){}
+}
+
+navToggle.addEventListener('click', ()=> {
+  setNavCollapsed(!navCollapsed);
+  navToggle.blur();
+});
+
+(function loadNavPref(){
+  try {
+    const v = localStorage.getItem('peak-nav-collapsed-v1');
+    if (v === '1') setNavCollapsed(true, false);
+  } catch(e){}
+})();
+
+function showSection(id, pushState = true) {
+  if (!sections[id]) return;
+  if (id === currentSection) return;
+
+  Object.values(sections).forEach(s => {
+    s.classList.remove('active');
+    s.setAttribute('aria-hidden','true');
+  });
+
+  const target = sections[id];
+  target.classList.add('active');
+  target.setAttribute('aria-hidden','false');
+  currentSection = id;
+  
+  navItems.forEach(n => n.classList.toggle('active', n.dataset.section === id));
+  
+  if (pushState) {
+    try { history.pushState({section:id}, '', '#'+id); } catch(e){}
+  }
+
+  try {
+    const appTop = $('#peak-app').getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({ top: Math.max(0, appTop - 12), left: 0, behavior: 'auto' });
+  } catch (e) {
+    window.scrollTo(0,0);
+  }
+
+  requestAnimationFrame(()=> {
+    const first = target.querySelector('button, [href], input, textarea, [tabindex]:not([tabindex="-1"])');
+    if (first) {
+      try { first.focus && first.focus({preventScroll:true}); } catch (err) { try { first.focus(); } catch(e){} }
+    }
+  });
+  
+  // Initialize tools when tools section is shown
+  if (id === 'tools') {
+    setTimeout(initAllTools, 100);
+  }
+}
+
+navItems.forEach(item => {
+  const id = item.dataset.section;
+  item.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    if (id === 'discord') return;
+    showSection(id);
+  });
+  item.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); item.click(); }
+  });
+});
+
+(function initFromHash(){
+  const h = location.hash ? location.hash.slice(1) : '';
+  if (h && sections[h]) { showSection(h, false); }
+})();
+
+window.addEventListener('popstate', (e) => {
+  const s = (e.state && e.state.section) || (location.hash ? location.hash.slice(1) : 'dashboard');
+  if (sections[s]) showSection(s, false);
+});
+
+$('#discordNav')?.addEventListener('click', ()=> {
+  window.open('https://discord.gg/BWn3dZyxcp','_blank','noopener,noreferrer');
+});
+
+/* ========= Settings ========= */
+(function settings(){
+  const settingsBtn = $('#settingsBtn');
+  const panel = $('#settingsPanel');
+  const closeBtn = $('#closeSettings');
+  const tabs = $$('.tab');
+  const pages = $$('.settings-page');
+  const themeSelect = $('#themeSelect');
+  const accentColor = $('#accentColor');
+  const cursorToggle = $('#cursorToggle');
+  const navCollapseToggle = $('#navCollapseToggle');
+  const reduceMotionToggle = $('#reduceMotionToggle');
+  const resetPrefs = $('#resetPrefs');
+
+  function showTab(name){ 
+    tabs.forEach(t=>t.setAttribute('aria-selected', t.dataset.tab===name ? 'true':'false')); 
+    pages.forEach(p=>p.hidden = p.dataset.page !== name); 
+  }
+  tabs.forEach(t => t.addEventListener('click', ()=> showTab(t.dataset.tab)));
+  showTab('general');
+
+  settingsBtn.addEventListener('click', ()=> {
+    const open = panel.classList.toggle('open');
+    panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    settingsBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open) $('.tab[aria-selected="true"]')?.focus();
+  });
+  
+  closeBtn.addEventListener('click', ()=> { 
+    panel.classList.remove('open'); 
+    panel.setAttribute('aria-hidden','true'); 
+    settingsBtn.focus(); 
+  });
+
+  function applyTheme(t){ 
+    document.body.classList.remove('theme-dark','theme-neon','theme-light'); 
+    document.body.classList.add(t); 
+    // Force repaint
+    document.documentElement.style.display = 'none';
+    document.documentElement.offsetHeight; // Trigger reflow
+    document.documentElement.style.display = '';
+    try{ localStorage.setItem('peak-theme-v1', t);}catch(e){} 
+  }
+  
+  function applyAccent(c){ 
+    document.documentElement.style.setProperty('--accent', c); 
+    document.documentElement.style.setProperty('--accent-2', c); 
+    try{ localStorage.setItem('peak-accent-v1', c);}catch(e){} 
+  }
+
+  themeSelect?.addEventListener('change', e=> applyTheme(e.target.value));
+  accentColor?.addEventListener('input', e=> applyAccent(e.target.value));
+
+  function setCursorEnabled(v){
+    document.body.classList.toggle('custom-cursor-enabled', !!v);
+    cursorToggle.textContent = v ? 'On' : 'Off';
+    cursorToggle.setAttribute('aria-pressed', v ? 'true' : 'false');
+    try{ localStorage.setItem('peak-cursor-enabled-v1', v ? '1' : '0'); }catch(e){}
+  }
+  
+  cursorToggle?.addEventListener('click', ()=> { 
+    const cur = localStorage.getItem('peak-cursor-enabled-v1') !== '0'; 
+    setCursorEnabled(!cur); 
+  });
+
+  navCollapseToggle?.addEventListener('click', ()=> {
+    setNavCollapsed(!sideNav.classList.contains('collapsed'));
+  });
+
+  reduceMotionToggle?.addEventListener('click', ()=> {
+    const cur = localStorage.getItem('peak-reduce-motion-v1') === '1';
+    if(!cur) { 
+      document.documentElement.style.setProperty('scroll-behavior','auto'); 
+      localStorage.setItem('peak-reduce-motion-v1','1'); 
+      reduceMotionToggle.textContent='On'; 
+    } else { 
+      document.documentElement.style.removeProperty('scroll-behavior'); 
+      localStorage.removeItem('peak-reduce-motion-v1'); 
+      reduceMotionToggle.textContent='Off'; 
+    }
+  });
+
+  resetPrefs?.addEventListener('click', ()=> {
+    if(!confirm('Reset local settings?')) return;
+    localStorage.removeItem('peak-theme-v1'); 
+    localStorage.removeItem('peak-accent-v1'); 
+    localStorage.removeItem('peak-cursor-enabled-v1'); 
+    localStorage.removeItem('peak-nav-collapsed-v1'); 
+    localStorage.removeItem('peak-reduce-motion-v1');
+    location.reload();
+  });
+
+  try{
+    const t = localStorage.getItem('peak-theme-v1') || 'theme-dark';
+    themeSelect && (themeSelect.value = t); applyTheme(t);
+    const a = localStorage.getItem('peak-accent-v1') || '#00f2ff';
+    accentColor && (accentColor.value = a); applyAccent(a);
+    const cur = localStorage.getItem('peak-cursor-enabled-v1') !== '0';
+    setCursorEnabled(cur);
+    const red = localStorage.getItem('peak-reduce-motion-v1') === '1';
+    reduceMotionToggle && (reduceMotionToggle.textContent = red ? 'On' : 'Off');
+  }catch(e){}
+})();
+
+/* ========= Dashboard ========= */
+function updateClock() {
+  const now = new Date();
+  const clockEl = $('#clock');
+  const dateEl = $('#date');
+  if(!clockEl || !dateEl) return;
+  clockEl.textContent = now.toLocaleTimeString();
+  dateEl.textContent = now.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+(function initBattery() {
+  const batteryEl = $('#battery');
+  const statusEl = $('#batteryStatus');
+  if (!batteryEl || !statusEl) return;
+  if (navigator.getBattery) {
+    navigator.getBattery().then(b => {
+      const update = () => { 
+        batteryEl.textContent = Math.round(b.level*100) + '%'; 
+        statusEl.textContent = b.charging ? 'Charging' : 'On Battery'; 
+      };
+      update();
+      b.addEventListener('levelchange', update);
+      b.addEventListener('chargingchange', update);
+    }).catch(()=> { batteryEl.textContent='N/A'; statusEl.textContent='Unavailable'; });
+  } else { batteryEl.textContent='N/A'; statusEl.textContent='Unsupported'; }
+})();
+
+const newsItems = ["System Optimized.","Proxy Hub Ready.","Latest Updates Live.","Welcome, Operator.","Neon Grid Stable.","Starfield Synced."];
+let newsIndex = 0;
+function rotateNews(){ 
+  const el=$('#news'); 
+  if(!el) return; 
+  el.textContent=newsItems[newsIndex]; 
+  newsIndex=(newsIndex+1)%newsItems.length; 
+}
+setInterval(rotateNews, 4000); 
+rotateNews();
+
+/* ========= Proxy Hub ========= */
+const FAVS_KEY = 'peak-proxies-favs-v1';
+const VOTES_KEY = 'peak-proxy-votes-v1';
+const USER_VOTES_KEY = 'peak-proxy-user-votes-v1';
+
+function loadJSON(key, fallback) { 
+  try { 
+    const raw = localStorage.getItem(key); 
+    if (!raw) return fallback; 
+    return JSON.parse(raw); 
+  } catch (e) { 
+    return fallback; 
+  } 
+}
+
+function saveJSON(key, obj) { 
+  try { 
+    localStorage.setItem(key, JSON.stringify(obj)); 
+  } catch (e) {} 
+}
+
+let favMap = loadJSON(FAVS_KEY, {});
+let voteMap = loadJSON(VOTES_KEY, {});
+let userVoteMap = loadJSON(USER_VOTES_KEY, {});
+
+function saveFavs(map) { saveJSON(FAVS_KEY, map); }
+function saveVotes() { saveJSON(VOTES_KEY, voteMap); saveJSON(USER_VOTES_KEY, userVoteMap); }
+
+function isFav(id){ return !!favMap[id]; }
+function toggleFav(id){ 
+  const wasFav = !!favMap[id];
+  if (favMap[id]) delete favMap[id]; 
+  else favMap[id] = true; 
+  saveFavs(favMap); 
+  buildHub(currentQuery);
+  showToast(wasFav ? 'Removed from favorites' : 'Added to favorites', 'success', 2000);
+}
+
+function normalizeUrl(u) { 
+  if (!u) return ''; 
+  const s = (u||'').trim(); 
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(s)) return s; 
+  return 'https://' + s; 
+}
+
+function getCounts(url) { 
+  const n = normalizeUrl(url); 
+  const v = voteMap[n] || { blocked:0, unblocked:0 }; 
+  return { blocked: v.blocked || 0, unblocked: v.unblocked || 0 }; 
+}
+
+function toggleVote(url, choice) {
+  const n = normalizeUrl(url);
+  voteMap[n] = voteMap[n] || { blocked: 0, unblocked: 0 };
+  const prev = userVoteMap[n];
+  if (prev === choice) {
+    voteMap[n][choice] = Math.max(0, (voteMap[n][choice] || 1) - 1);
+    delete userVoteMap[n];
+  } else {
+    if (prev) voteMap[n][prev] = Math.max(0, (voteMap[n][prev] || 1) - 1);
+    voteMap[n][choice] = (voteMap[n][choice] || 0) + 1;
+    userVoteMap[n] = choice;
+  }
+  saveVotes();
+  buildHub(currentQuery);
+}
+
+$('#exportVotesBtn')?.addEventListener('click', () => {
+  try {
+    const blob = new Blob([JSON.stringify(voteMap, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'peak-votes.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast('Votes exported successfully!', 'success');
+  } catch(e) {
+    showToast('Failed to export votes', 'error');
+  }
+});
+
+/* ========= PROXY DATABASE - EASY TO ADD NEW PROXIES ========= */
+/*
+  HOW TO ADD A NEW PROXY:
+  1. Copy the template below
+  2. Fill in the information
+  3. Add it to the PROXIES array
+  
+  TEMPLATE:
+  {
+    id: 'unique-proxy-name',        // Unique identifier (no spaces, lowercase)
+    name: 'Display Name',            // Name shown to users
+    subtitle: 'short description',   // Short tagline or description
+    links: [                         // Array of proxy links
+      { title: 'Link 1', url: 'https://example.com' },
+      { title: 'Link 2', url: 'https://example2.com' }
+    ]
+  },
+*/
+
+const PROXIES = [
+  {
+    id: 'truffled',
+    name: 'truffled',
+    subtitle: 'truffel',
+    links: [
+      { title: 'Link 1', url: 'https://educational.radissontucson.com/' },
+      { title: 'Link 2', url: 'https://vacation.briaquaticcabinets.com/' }
+    ]
+  },
+  {
+    id: 'overcloacked',
+    name: 'Overcloacked',
+    subtitle: 'best proxy',
+    links: [
+      { title: 'Link 1', url: 'https://d58o0iyi.beanweb.qzz.io.cdn.cloudflare.net/' },
+      { title: 'Link 2', url: 'https://stayat.hotelconsuladoinn.com/' }
+    ]
+  },
+  {
+    id: 'fern',
+    name: 'fern',
+    subtitle: 'epic',
+    links: [
+      { title: 'Link 1', url: 'https://apple1.vandrekalenderen.dk/' }
+    ]
+  },
+  {
+    id: 'infamous',
+    name: 'infamous',
+    subtitle: 'evil',
+    links: [
+      { title: 'Link 1', url: 'orphan.hotelconsuladoinn.com' },
+      { title: 'Link 2', url: 'poor.hotelconsuladoinn.com' }
+    ]
+  },
+  {
+    id: 'void-network',
+    name: 'Void network',
+    subtitle: 'space',
+    links: [
+      { title: 'Link 1', url: 'edu.ucecom-craiova.ro' },
+      { title: 'Link 2', url: 'gov.proyectojusticia.com.mx' }
+    ]
+  },
+  {
+    id: 'endis',
+    name: 'Endis',
+    subtitle: 'poptart',
+    links: [
+      { title: 'Link 1', url: 'https://endis.cute.lat/' },
+      { title: 'Link 2', url: 'cute.lat' }
+    ]
+  },
+  {
+    id: 'glint',
+    name: 'glint',
+    subtitle: 'copier',
+    links: [
+      { title: 'Link 1', url: 'https://aqua.bastaff.ru/' },
+      { title: 'Link 2', url: 'https://ixll.creographix.at/' }
+    ]
+  },
+  {
+    id: 'geomerty-learn-v4',
+    name: 'geometry learn v4',
+    subtitle: 'w proxy',
+    links: [
+      { title: 'Link 1', url: 'https://geometry-volume4.websdr64.ru' }
+    ]
+  },
+  {
+    id: 'ghost',
+    name: 'Ghost',
+    subtitle: 'nice',
+    links: [
+      { title: 'Link 1', url: 'https://d3i98h3wj731z8.cloudfront.net/' }
+    ]
+  },
+  {
+    id: 'bolt',
+    name: 'bolt',
+    subtitle: 'fast',
+    links: [
+      { title: 'Link 1', url: 'apple33.hicam.net' }
+    ]
+  },
+  {
+    id: 'uniub',
+    name: 'Uniub',
+    subtitle: 'weird',
+    links: [
+      { title: 'Link 1', url: 'https://learnaboutbillclinton.bisblick.org/',title: 'Link 2', url: 'https://aphistorytutoring.bisblick.org/' }
+    ]
+  },
+  {
+    id: 'saturn',
+    name: 'Saturn',
+    subtitle: 'space',
+    links: [
+      { title: 'Link 1', url: 'https://lightspeedisass.graphicon.org/' }
+    ]
+  }
+  
+  // ⬇️ ADD YOUR NEW PROXIES BELOW THIS LINE ⬇️
+  // Just copy the template from the top and paste here!
+  
+];
+/* ========= END PROXY DATABASE ========= */
+
+let currentQuery = '';
+const searchInput = $('#searchInput');
+const clearSearchBtn = $('#clearSearch');
+
+if (searchInput) {
+  searchInput.addEventListener('input', (e) => {
+    currentQuery = e.target.value.trim().toLowerCase();
+    buildHub(currentQuery);
+  });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { searchInput.value=''; currentQuery=''; buildHub(''); }
+  });
+}
+
+clearSearchBtn?.addEventListener('click', () => {
+  if (!searchInput) return;
+  searchInput.value = '';
+  currentQuery = '';
+  buildHub('');
+  searchInput.focus();
+});
+
+function matchesQuery(proxy, q) {
+  if (!q) return true;
+  q = q.toLowerCase();
+  if ((proxy.name || '').toLowerCase().includes(q)) return true;
+  if ((proxy.subtitle || '').toLowerCase().includes(q)) return true;
+  if (Array.isArray(proxy.links)) {
+    for (const l of proxy.links) {
+      if ((l.title || '').toLowerCase().includes(q)) return true;
+      if ((l.url || '').toLowerCase().includes(q)) return true;
+    }
+  }
+  return false;
+}
+
+function buildHub(filter = '') {
+  const grid = $('#hubGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const list = PROXIES.filter(p => matchesQuery(p, filter));
+  
+  // Update count display
+  const countEl = $('#proxyCount');
+  if (countEl) {
+    countEl.textContent = filter ? `${list.length}/${PROXIES.length} proxies` : `${PROXIES.length} proxies`;
+  }
+  
+  if (list.length === 0) {
+    const note = el('div');
+    note.className = 'muted';
+    note.style.padding = '20px';
+    note.textContent = 'No proxies match your search.';
+    grid.appendChild(note);
+    return;
+  }
+
+  list.forEach(proxy => {
+    const card = el('div', 'peak-card small');
+    card.setAttribute('role', 'listitem');
+    card.dataset.proxyId = proxy.id;
+    if (isFav(proxy.id)) card.classList.add('favorite');
+
+    const header = el('div', 'proxy-header');
+    const left = el('div');
+    const title = el('div', 'proxy-title'); 
+    title.textContent = proxy.name || 'Unnamed';
+    left.appendChild(title);
+    if (proxy.subtitle) {
+      const sub = el('div', 'proxy-sub'); 
+      sub.textContent = proxy.subtitle; 
+      left.appendChild(sub);
+    }
+
+    const actions = el('div', 'proxy-actions');
+    const fav = el('button', 'fav-btn'); 
+    fav.type='button'; 
+    fav.title = isFav(proxy.id) ? 'Unfavorite' : 'Favorite';
+    fav.innerText = isFav(proxy.id) ? '★' : '☆'; 
+    if (!isFav(proxy.id)) fav.classList.add('inactive'); 
+    fav.addEventListener('click', ()=> toggleFav(proxy.id)); 
+    actions.appendChild(fav);
+
+    const toggle = el('button', 'proxy-toggle'); 
+    toggle.type='button'; 
+    toggle.setAttribute('aria-expanded','false'); 
+    toggle.textContent = 'Open';
+    toggle.addEventListener('click', ()=> togglePanel(card, toggle)); 
+    actions.appendChild(toggle);
+
+    header.appendChild(left);
+    header.appendChild(actions);
+    card.appendChild(header);
+
+    const panel = el('div','links-panel');
+    panel.setAttribute('aria-hidden','true');
+
+    if (Array.isArray(proxy.links) && proxy.links.length) {
+      proxy.links.forEach(ln => {
+        const item = el('div','link-item');
+
+        const leftItem = el('div','link-left');
+        const linkText = el('div','link-text'); 
+        linkText.textContent = ln.title || ln.url || '';
+        const linkUrl = el('div','link-url'); 
+        linkUrl.textContent = ln.url || '';
+        leftItem.appendChild(linkText); 
+        leftItem.appendChild(linkUrl);
+
+        const linkActions = el('div','link-actions');
+
+        const openBtn = el('button','icon-btn'); 
+        openBtn.type='button'; 
+        openBtn.textContent='Open';
+        openBtn.addEventListener('click', ()=> {
+          const url = normalizeUrl(ln.url);
+          try { window.open(url,'_blank','noopener,noreferrer'); } catch(e){}
+        });
+
+        const copyBtn = el('button','icon-btn'); 
+        copyBtn.type='button'; 
+        copyBtn.textContent='📋 Copy';
+        copyBtn.addEventListener('click', async ()=> {
+          const url = ln.url || '';
+          try {
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(url);
+              copyBtn.textContent = '✓ Copied!';
+              showToast('Link copied to clipboard!', 'success', 2000);
+            } else {
+              // Fallback for older browsers
+              const textArea = document.createElement('textarea');
+              textArea.value = url;
+              textArea.style.position = 'fixed';
+              textArea.style.left = '-9999px';
+              document.body.appendChild(textArea);
+              textArea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textArea);
+              copyBtn.textContent = '✓ Copied!';
+              showToast('Link copied!', 'success', 2000);
+            }
+            setTimeout(()=> copyBtn.textContent = '📋 Copy', 2000);
+          } catch(e){
+            console.error('Copy failed:', e);
+            // Final fallback - show the URL
+            showToast('Copy failed. URL: ' + url, 'error', 4000);
+            copyBtn.textContent = '✕ Failed';
+            setTimeout(()=> copyBtn.textContent = '📋 Copy', 2000);
+          }
+        });
+
+        const normalized = normalizeUrl(ln.url);
+        const counts = getCounts(normalized);
+
+        const blockedBtn = el('button','vote-btn'); 
+        blockedBtn.type='button'; 
+        blockedBtn.textContent = 'Blocked';
+        const unblockBtn = el('button','vote-btn'); 
+        unblockBtn.type='button'; 
+        unblockBtn.textContent = 'Unblocked';
+
+        const countDisplay = el('span','vote-count'); 
+        countDisplay.textContent = `${counts.blocked}/${counts.unblocked}`;
+
+        const prev = userVoteMap[normalized];
+        if (prev === 'blocked') blockedBtn.classList.add('voted');
+        if (prev === 'unblocked') unblockBtn.classList.add('voted');
+
+        blockedBtn.addEventListener('click', ()=> toggleVote(normalized, 'blocked'));
+        unblockBtn.addEventListener('click', ()=> toggleVote(normalized, 'unblocked'));
+
+        linkActions.appendChild(openBtn);
+        linkActions.appendChild(copyBtn);
+        linkActions.appendChild(blockedBtn);
+        linkActions.appendChild(unblockBtn);
+        linkActions.appendChild(countDisplay);
+
+        item.appendChild(leftItem);
+        item.appendChild(linkActions);
+        panel.appendChild(item);
+      });
+    } else {
+      const empty = el('div'); 
+      empty.className='muted'; 
+      empty.textContent='No links configured for this proxy.'; 
+      panel.appendChild(empty);
+    }
+
+    const footer = el('div','card-footer'); 
+    footer.textContent = 'Click "Open" to reveal endpoints. Vote to mark link status (blocked/unblocked).';
+
+    card.appendChild(panel);
+    card.appendChild(footer);
+    grid.appendChild(card);
+  });
+}
+
+function togglePanel(card, toggleBtn) {
+  const panel = card.querySelector('.links-panel');
+  const isOpen = panel.classList.contains('open');
+
+  $$('.links-panel.open').forEach(p => {
+    if (p !== panel) {
+      p.classList.remove('open'); 
+      p.setAttribute('aria-hidden','true');
+      const t = p.closest('.peak-card')?.querySelector('.proxy-toggle');
+      if (t) { 
+        t.setAttribute('aria-expanded','false'); 
+        t.textContent='Open'; 
+      }
+    }
+  });
+
+  if (isOpen) {
+    panel.classList.remove('open'); 
+    panel.setAttribute('aria-hidden','true');
+    toggleBtn.setAttribute('aria-expanded','false'); 
+    toggleBtn.textContent='Open';
+  } else {
+    panel.classList.add('open'); 
+    panel.setAttribute('aria-hidden','false');
+    toggleBtn.setAttribute('aria-expanded','true'); 
+    toggleBtn.textContent='Close';
+    const firstOpen = panel.querySelector('.icon-btn'); 
+    if (firstOpen) firstOpen.focus({preventScroll:true});
+  }
+}
+
+buildHub();
+
+// Initialize proxy count display
+setTimeout(() => {
+  const countEl = $('#proxyCount');
+  if (countEl) countEl.textContent = `${PROXIES.length} proxies`;
+}, 100);
+
+/* ========= Partners ========= */
+const partners = [
+  { id: 'p2', name: 'no partners yet', imageSrc: 'https://via.placeholder.com/150?text=Partner+2', url: 'https://example.com/partner2', desc: 'lots of nothingness' },
+];
+
+function buildPartnersGrid() {
+  const grid = $('#partnersGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  partners.forEach(p => {
+    const card = el('div', 'partner-card');
+    card.setAttribute('role', 'listitem');
+
+    const imgUrl = p.imageSrc && p.imageSrc.trim() !== '' ? p.imageSrc.trim() : 'https://via.placeholder.com/160x160?text=No+Logo';
+
+    const img = el('img');
+    img.className = 'partner-logo';
+    img.alt = p.name + ' logo';
+    img.src = imgUrl;
+
+    const name = el('div'); 
+    name.className = 'partner-name'; 
+    name.textContent = p.name || 'Unnamed';
+    const desc = el('div'); 
+    desc.className = 'partner-desc'; 
+    desc.textContent = p.desc || '';
+
+    const actions = el('div'); 
+    actions.className = 'partner-actions';
+    const link = el('a'); 
+    link.href = p.url || '#'; 
+    link.target = '_blank'; 
+    link.rel = 'noopener noreferrer'; 
+    link.textContent = 'Visit';
+    actions.appendChild(link);
+
+    card.appendChild(img); 
+    card.appendChild(name); 
+    if (p.desc) card.appendChild(desc); 
+    card.appendChild(actions);
+    grid.appendChild(card);
+  });
+}
+buildPartnersGrid();
+
+/* ========= Navigation buttons ========= */
+$('#updates-back')?.addEventListener('click', ()=> showSection('dashboard'));
+$('#partners-back')?.addEventListener('click', ()=> showSection('dashboard'));
+$('#open-partners-from-hub')?.addEventListener('click', ()=> showSection('partners'));
+$('#hub-back')?.addEventListener('click', ()=> showSection('dashboard'));
+$('#tools-back')?.addEventListener('click', ()=> showSection('dashboard'));
+
+/* ========= TOOLS FUNCTIONALITY ========= */
+
+let toolsInitialized = false;
+
+// Timer variables
+let timerInterval = null;
+let timerSeconds = 300; // Default 5 minutes
+let timerRunning = false;
+
+// Calculator variables
+let calcValue = '0';
+let calcOperator = null;
+let calcPrevious = null;
+let calcNewNumber = true;
+
+// Stopwatch variables
+let stopwatchInterval = null;
+let stopwatchMs = 0;
+let stopwatchRunning = false;
+let lapCount = 0;
+
+function initAllTools() {
+  if (toolsInitialized) return; // Already initialized
+  toolsInitialized = true;
+  
+  // Initialize Timer
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerStart = document.getElementById('timerStart');
+  const timerPause = document.getElementById('timerPause');
+  const timerReset = document.getElementById('timerReset');
+  const timerSet = document.getElementById('timerSet');
+  
+  if (timerStart) {
+    // Update display
+    function updateTimerDisplay() {
+      if (!timerDisplay) return;
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+    updateTimerDisplay();
+    
+    timerStart.onclick = () => {
+      if (!timerRunning) {
+        if (timerSeconds === 0) {
+          showToast('Please set a time first!', 'error', 2000);
+          return;
+        }
+        timerRunning = true;
+        timerStart.textContent = 'Running...';
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            timerStart.textContent = 'Start';
+            showToast('⏰ Timer finished!', 'success', 3000);
+          }
+        }, 1000);
+      }
+    };
+    
+    timerPause.onclick = () => {
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerStart.textContent = 'Start';
+        showToast('Timer paused', 'info', 1500);
+      }
+    };
+    
+    timerReset.onclick = () => {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerSeconds = 300;
+      timerStart.textContent = 'Start';
+      updateTimerDisplay();
+      showToast('Timer reset to 5:00', 'info', 1500);
+    };
+    
+    timerSet.onclick = () => {
+      const mins = parseInt(document.getElementById('timerMinutes').value) || 0;
+      const secs = parseInt(document.getElementById('timerSeconds').value) || 0;
+      timerSeconds = (mins * 60) + secs;
+      updateTimerDisplay();
+      showToast(`Timer set to ${mins}:${String(secs).padStart(2, '0')}`, 'success', 2000);
+    };
+  }
+  
+  // Initialize Calculator
+  const calcDisplay = document.getElementById('calcDisplay');
+  const calcButtons = document.querySelectorAll('.calc-btn');
+  
+  function updateCalcDisplay() {
+    if (calcDisplay) calcDisplay.value = calcValue;
+  }
+  
+  calcButtons.forEach(btn => {
+    btn.onclick = () => {
+      const val = btn.dataset.value;
+      
+      if (val === 'C') {
+        calcValue = '0';
+        calcOperator = null;
+        calcPrevious = null;
+        calcNewNumber = true;
+      } else if (val === 'back') {
+        calcValue = calcValue.length > 1 ? calcValue.slice(0, -1) : '0';
+      } else if (val === '=') {
+        if (calcOperator && calcPrevious !== null) {
+          const prev = parseFloat(calcPrevious);
+          const curr = parseFloat(calcValue);
+          switch(calcOperator) {
+            case '+': calcValue = String(prev + curr); break;
+            case '-': calcValue = String(prev - curr); break;
+            case '*': calcValue = String(prev * curr); break;
+            case '/': calcValue = curr !== 0 ? String(prev / curr) : 'Error'; break;
+          }
+          calcOperator = null;
+          calcPrevious = null;
+          calcNewNumber = true;
+        }
+      } else if (['+', '-', '*', '/'].includes(val)) {
+        if (calcOperator && calcPrevious !== null && !calcNewNumber) {
+          const prev = parseFloat(calcPrevious);
+          const curr = parseFloat(calcValue);
+          switch(calcOperator) {
+            case '+': calcValue = String(prev + curr); break;
+            case '-': calcValue = String(prev - curr); break;
+            case '*': calcValue = String(prev * curr); break;
+            case '/': calcValue = curr !== 0 ? String(prev / curr) : 'Error'; break;
+          }
+        }
+        calcPrevious = calcValue;
+        calcOperator = val;
+        calcNewNumber = true;
+      } else {
+        if (calcNewNumber) {
+          calcValue = val;
+          calcNewNumber = false;
+        } else {
+          calcValue = calcValue === '0' ? val : calcValue + val;
+        }
+      }
+      updateCalcDisplay();
+    };
+  });
+  
+  // Initialize Stopwatch
+  const stopwatchDisplay = document.getElementById('stopwatchDisplay');
+  const stopwatchStart = document.getElementById('stopwatchStart');
+  const stopwatchLap = document.getElementById('stopwatchLap');
+  const stopwatchReset = document.getElementById('stopwatchReset');
+  const lapTimes = document.getElementById('lapTimes');
+  
+  if (stopwatchStart) {
+    function updateStopwatchDisplay() {
+      if (!stopwatchDisplay) return;
+      const hours = Math.floor(stopwatchMs / 3600000);
+      const mins = Math.floor((stopwatchMs % 3600000) / 60000);
+      const secs = Math.floor((stopwatchMs % 60000) / 1000);
+      stopwatchDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+    
+    stopwatchStart.onclick = () => {
+      if (!stopwatchRunning) {
+        stopwatchRunning = true;
+        const startTime = Date.now() - stopwatchMs;
+        stopwatchInterval = setInterval(() => {
+          stopwatchMs = Date.now() - startTime;
+          updateStopwatchDisplay();
+        }, 100);
+        stopwatchStart.textContent = 'Stop';
+      } else {
+        clearInterval(stopwatchInterval);
+        stopwatchRunning = false;
+        stopwatchStart.textContent = 'Start';
+      }
+    };
+    
+    stopwatchLap.onclick = () => {
+      if (stopwatchRunning && lapTimes) {
+        lapCount++;
+        const lapTime = stopwatchDisplay.textContent;
+        const lapDiv = document.createElement('div');
+        lapDiv.textContent = `Lap ${lapCount}: ${lapTime}`;
+        lapDiv.style.padding = '6px';
+        lapDiv.style.borderBottom = '1px solid rgba(0,242,255,0.1)';
+        lapDiv.style.color = '#9befff';
+        lapTimes.insertBefore(lapDiv, lapTimes.firstChild);
+        showToast(`Lap ${lapCount} recorded`, 'success', 1500);
+      }
+    };
+    
+    stopwatchReset.onclick = () => {
+      clearInterval(stopwatchInterval);
+      stopwatchRunning = false;
+      stopwatchMs = 0;
+      lapCount = 0;
+      updateStopwatchDisplay();
+      stopwatchStart.textContent = 'Start';
+      if (lapTimes) lapTimes.innerHTML = '';
+      showToast('Stopwatch reset', 'info', 1500);
+    };
+  }
+  
+  // Initialize Unit Converter
+  const unitType = document.getElementById('unitType');
+  const unitInput = document.getElementById('unitInput');
+  const unitFrom = document.getElementById('unitFrom');
+  const unitTo = document.getElementById('unitTo');
+  const unitResult = document.getElementById('unitResult');
+  
+  if (unitType && unitInput) {
+    const conversions = {
+      length: { m: 1, km: 0.001, ft: 3.28084, mi: 0.000621371 },
+      weight: { kg: 1, g: 1000, lb: 2.20462, oz: 35.274 }
+    };
+    
+    function convertUnits() {
+      if (!unitType || !unitInput || !unitFrom || !unitTo || !unitResult) return;
+      
+      const inputVal = parseFloat(unitInput.value) || 0;
+      let resultVal = 0;
+      
+      if (unitType.value === 'temperature') {
+        let celsius = inputVal;
+        if (unitFrom.value === 'f') celsius = (inputVal - 32) * 5/9;
+        else if (unitFrom.value === 'k') celsius = inputVal - 273.15;
+        
+        if (unitTo.value === 'c') resultVal = celsius;
+        else if (unitTo.value === 'f') resultVal = (celsius * 9/5) + 32;
+        else if (unitTo.value === 'k') resultVal = celsius + 273.15;
+      } else {
+        const baseValue = inputVal / conversions[unitType.value][unitFrom.value];
+        resultVal = baseValue * conversions[unitType.value][unitTo.value];
+      }
+      
+      unitResult.textContent = `${resultVal.toFixed(4)} ${unitTo.value}`;
+    }
+    
+    function updateUnitOptions() {
+      if (!unitType || !unitFrom || !unitTo) return;
+      
+      unitFrom.innerHTML = '';
+      unitTo.innerHTML = '';
+      
+      if (unitType.value === 'length') {
+        unitFrom.innerHTML = '<option value="m">Meters</option><option value="km">Kilometers</option><option value="ft">Feet</option><option value="mi">Miles</option>';
+        unitTo.innerHTML = '<option value="m">Meters</option><option value="km">Kilometers</option><option value="ft">Feet</option><option value="mi">Miles</option>';
+      } else if (unitType.value === 'weight') {
+        unitFrom.innerHTML = '<option value="kg">Kilograms</option><option value="g">Grams</option><option value="lb">Pounds</option><option value="oz">Ounces</option>';
+        unitTo.innerHTML = '<option value="kg">Kilograms</option><option value="g">Grams</option><option value="lb">Pounds</option><option value="oz">Ounces</option>';
+      } else if (unitType.value === 'temperature') {
+        unitFrom.innerHTML = '<option value="c">Celsius</option><option value="f">Fahrenheit</option><option value="k">Kelvin</option>';
+        unitTo.innerHTML = '<option value="c">Celsius</option><option value="f">Fahrenheit</option><option value="k">Kelvin</option>';
+      }
+      convertUnits();
+    }
+    
+    unitType.onchange = updateUnitOptions;
+    unitInput.oninput = convertUnits;
+    unitFrom.onchange = convertUnits;
+    unitTo.onchange = convertUnits;
+    
+    convertUnits();
+  }
+  
+  console.log('✅ All tools initialized successfully!');
+}
+
+/* ========= Custom Cursor ========= */
+(function customCursor() {
+  const cursorEl = $('#customCursor');
+  const body = document.body;
+  
+  if ('ontouchstart' in window || window.matchMedia('(pointer:coarse)').matches) {
+    cursorEl.style.display = 'none';
+    return;
+  }
+
+  body.classList.add('custom-cursor-enabled');
+  cursorEl.style.display = 'block';
+
+  let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+  let cx = mouseX, cy = mouseY;
+  const ease = 0.18;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursorEl.style.opacity = '1';
+  });
+
+  document.addEventListener('mouseenter', ()=> cursorEl.style.opacity = '1');
+  document.addEventListener('mouseleave', ()=> cursorEl.style.opacity = '0');
+
+  document.addEventListener('mousedown', ()=> cursorEl.classList.add('cursor-click'));
+  document.addEventListener('mouseup', ()=> cursorEl.classList.remove('cursor-click'));
+
+  const hoverTargetsSelector = 'a,button,input,textarea,select,summary,[role="button"],.icon-btn,.proxy-toggle,.fav-btn,.nav-item';
+  function bindHoverState(el){
+    el.addEventListener('mouseenter', ()=> cursorEl.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave', ()=> cursorEl.classList.remove('cursor-hover'));
+  }
+  $$(hoverTargetsSelector).forEach(bindHoverState);
+
+  function raf() {
+    cx += (mouseX - cx) * ease;
+    cy += (mouseY - cy) * ease;
+    cursorEl.style.left = cx + 'px';
+    cursorEl.style.top = cy + 'px';
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    cursorEl.style.display = 'none';
+    body.classList.remove('custom-cursor-enabled');
+  }
+})();
+
+/* ========= Keyboard Shortcuts ========= */
+document.addEventListener('keydown', (e) => {
+  if (e.target && /input|textarea/i.test(e.target.tagName)) return;
+  const k = e.key.toLowerCase();
+  
+  if (k === 'p') { showSection('hub'); showToast('📊 Proxy Hub', 'info', 1500); setTimeout(() => $('#searchInput')?.focus(), 100); }
+  else if (k === 't') { showSection('tools'); showToast('🛠️ Tools', 'info', 1500); }
+  else if (k === 'r') { showSection('partners'); showToast('🤝 Partners', 'info', 1500); }
+  else if (k === 'u') { showSection('updates'); showToast('📰 Updates', 'info', 1500); }
+  else if (k === 'h') { showSection('dashboard'); showToast('🏠 Dashboard', 'info', 1500); }
+  else if (k === 'd') { window.open('https://discord.gg/BWn3dZyxcp','_blank','noopener,noreferrer'); showToast('💬 Opening Discord...', 'info', 1500); }
+  else if (k === 's') { 
+    setNavCollapsed(!navCollapsed); 
+    showToast(navCollapsed ? '◀ Sidebar collapsed' : '▶ Sidebar expanded', 'info', 1500); 
+  }
+  else if (k === ',') { $('#settingsBtn').click(); }
+  else if (k === '?' || k === '/') { 
+    e.preventDefault();
+    const overlay = $('#shortcutsOverlay');
+    overlay.classList.toggle('show');
+  }
+  else if (k === 'escape') {
+    const overlay = $('#shortcutsOverlay');
+    if (overlay.classList.contains('show')) overlay.classList.remove('show');
+    const panel = $('#settingsPanel');
+    if (panel.classList.contains('open')) { panel.classList.remove('open'); panel.setAttribute('aria-hidden','true'); }
+  }
+});
+
+// Click outside to close shortcuts
+$('#shortcutsOverlay')?.addEventListener('click', (e) => {
+  if (e.target.id === 'shortcutsOverlay') {
+    e.target.classList.remove('show');
+  }
+});
+
+console.info('✨ PEAK UBG ready - Enhanced Edition with shortcuts!');
+
+})(); // End of main IIFE
+</script>
+</body>
+</html>
