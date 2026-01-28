@@ -6,7 +6,7 @@
 <title>Educational Resources | Student Learning Portal</title>
 
 <meta name="description" content="A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials." />
-<meta name="theme-color" content="#020308" />
+<meta name="theme-color" content="#2c5aa0" />
 
 <!-- FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,8 +29,10 @@
     --nav-collapsed: 56px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{width:100%;min-height:100%;background:var(--bg-3);color:#e6faff;font-family:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-  body{display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding-bottom:40px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  html,body{width:100%;min-height:100%;font-family:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+  body{min-height:100vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  body:not(.unlocked){background:#f5f5f5 !important;color:#333 !important;}
+  body.unlocked{background:var(--bg-3);color:#e6faff;display:flex;justify-content:center;align-items:flex-start;padding-bottom:40px;}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer}
 
@@ -267,6 +269,10 @@
     font-family: Georgia, 'Times New Roman', serif;
   }
   
+  body.unlocked #edu-disguise {
+    display: none !important;
+  }
+  
   #edu-disguise * {
     cursor: auto !important;
   }
@@ -277,11 +283,36 @@
   }
   
   #peak-root {
-    display: none;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
   }
   
-  #peak-root.unlocked {
-    display: flex;
+  body.unlocked #peak-root {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Hide all PEAK elements until unlocked */
+  body:not(.unlocked) #peak-starfield,
+  body:not(.unlocked) .peak-scanlines,
+  body:not(.unlocked) #customCursor,
+  body:not(.unlocked) #settingsBtn,
+  body:not(.unlocked) #settingsPanel,
+  body:not(.unlocked) #shortcutsOverlay,
+  body:not(.unlocked) #peak-loader,
+  body:not(.unlocked) #peak-root * {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  /* Ensure educational page is always visible when locked */
+  body:not(.unlocked) #edu-disguise {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 </style>
 </head>
@@ -843,8 +874,12 @@ function showToast(message, type = 'info', duration = 3000) {
   const loader = document.getElementById('peak-loader');
   if (!loader) return;
   
-  // Just hide it after a short delay - no fancy animations
+  // Only show/hide loader if interface is unlocked
   function hideLoader() {
+    if (!document.body.classList.contains('unlocked')) {
+      loader.style.display = 'none';
+      return;
+    }
     loader.style.transition = 'opacity 0.5s ease';
     loader.style.opacity = '0';
     setTimeout(() => {
@@ -855,19 +890,22 @@ function showToast(message, type = 'info', duration = 3000) {
     }, 500);
   }
   
-  // Hide immediately when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 500));
+  // Hide immediately when DOM is ready (only if unlocked)
+  if (document.body.classList.contains('unlocked')) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 500));
+    } else {
+      setTimeout(hideLoader, 500);
+    }
+    setTimeout(hideLoader, 2000);
   } else {
-    setTimeout(hideLoader, 500);
+    loader.style.display = 'none';
   }
-  
-  // Backup: force hide after 2 seconds no matter what
-  setTimeout(hideLoader, 2000);
 })();
 
 /* ========= Starfield ========= */
-(function initStarfield() {
+window.initStarfield = function initStarfield() {
+  if (!document.body.classList.contains('unlocked')) return;
   const canvas = $('#peak-starfield');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -882,6 +920,7 @@ function showToast(message, type = 'info', duration = 3000) {
   }
   window.addEventListener('resize', ()=>{ width=canvas.width=window.innerWidth; height=canvas.height=window.innerHeight; });
   (function frame(){
+    if (!document.body.classList.contains('unlocked')) return;
     ctx.clearRect(0,0,width,height);
     for (let i=0;i<stars.length;i++){
       const s=stars[i];
@@ -896,7 +935,11 @@ function showToast(message, type = 'info', duration = 3000) {
     }
     requestAnimationFrame(frame);
   })();
-})();
+};
+// Only initialize if unlocked
+if (document.body.classList.contains('unlocked')) {
+  window.initStarfield();
+}
 
 /* ========= Navigation ========= */
 const sideNav = $('#sideNav');
@@ -1915,7 +1958,9 @@ function initAllTools() {
     convertUnits();
   }
   
-  console.log('✅ All tools initialized successfully!');
+  if (document.body.classList.contains('unlocked')) {
+    console.log('✅ All tools initialized successfully!');
+  }
 }
 
 /* ========= Custom Cursor ========= */
@@ -1971,6 +2016,9 @@ function initAllTools() {
 
 /* ========= Keyboard Shortcuts ========= */
 document.addEventListener('keydown', (e) => {
+  // Only process shortcuts if interface is unlocked
+  if (!document.body.classList.contains('unlocked')) return;
+  
   if (e.target && /input|textarea/i.test(e.target.tagName)) return;
   const k = e.key.toLowerCase();
   
@@ -1984,17 +2032,17 @@ document.addEventListener('keydown', (e) => {
     setNavCollapsed(!navCollapsed); 
     showToast(navCollapsed ? '◀ Sidebar collapsed' : '▶ Sidebar expanded', 'info', 1500); 
   }
-  else if (k === ',') { $('#settingsBtn').click(); }
+  else if (k === ',') { $('#settingsBtn')?.click(); }
   else if (k === '?' || k === '/') { 
     e.preventDefault();
     const overlay = $('#shortcutsOverlay');
-    overlay.classList.toggle('show');
+    if (overlay) overlay.classList.toggle('show');
   }
   else if (k === 'escape') {
     const overlay = $('#shortcutsOverlay');
-    if (overlay.classList.contains('show')) overlay.classList.remove('show');
+    if (overlay && overlay.classList.contains('show')) overlay.classList.remove('show');
     const panel = $('#settingsPanel');
-    if (panel.classList.contains('open')) { panel.classList.remove('open'); panel.setAttribute('aria-hidden','true'); }
+    if (panel && panel.classList.contains('open')) { panel.classList.remove('open'); panel.setAttribute('aria-hidden','true'); }
   }
 });
 
@@ -2005,7 +2053,10 @@ $('#shortcutsOverlay')?.addEventListener('click', (e) => {
   }
 });
 
-console.info('✨ PEAK UBG ready - Enhanced Edition with shortcuts!');
+// Console logs removed for security
+if (document.body.classList.contains('unlocked')) {
+  console.info('✨ PEAK UBG ready - Enhanced Edition with shortcuts!');
+}
 
 /* ========= Educational Disguise Access ========= */
 (function initEducationalDisguise() {
@@ -2013,11 +2064,62 @@ console.info('✨ PEAK UBG ready - Enhanced Edition with shortcuts!');
   const secretBtn = document.getElementById('secret-access');
   const disguise = document.getElementById('edu-disguise');
   const peakRoot = document.getElementById('peak-root');
+  const body = document.body;
   
   if (!secretBtn || !disguise || !peakRoot) return;
   
-  // Hide main content initially
+  // Ensure everything is hidden initially
   peakRoot.style.display = 'none';
+  peakRoot.style.visibility = 'hidden';
+  peakRoot.style.opacity = '0';
+  body.classList.remove('unlocked');
+  
+  // Hide starfield and scanlines
+  const starfield = document.getElementById('peak-starfield');
+  const scanlines = document.querySelector('.peak-scanlines');
+  if (starfield) starfield.style.display = 'none';
+  if (scanlines) scanlines.style.display = 'none';
+  
+  function unlockInterface() {
+    body.classList.add('unlocked');
+    disguise.style.transition = 'opacity 0.6s ease';
+    disguise.style.opacity = '0';
+    
+    setTimeout(() => {
+      disguise.style.display = 'none';
+      peakRoot.style.display = 'flex';
+      peakRoot.style.visibility = 'visible';
+      peakRoot.style.opacity = '1';
+      
+      // Show starfield and scanlines
+      if (starfield) {
+        starfield.style.display = 'block';
+        starfield.width = window.innerWidth;
+        starfield.height = window.innerHeight;
+      }
+      if (scanlines) scanlines.style.display = 'block';
+      
+      // Reinitialize starfield
+      if (window.initStarfield && typeof window.initStarfield === 'function') {
+        setTimeout(() => window.initStarfield(), 100);
+      }
+      
+      // Reinitialize loader to hide it
+      const loader = document.getElementById('peak-loader');
+      if (loader) {
+        setTimeout(() => {
+          loader.style.transition = 'opacity 0.5s ease';
+          loader.style.opacity = '0';
+          setTimeout(() => {
+            if (loader && loader.parentNode) {
+              loader.style.display = 'none';
+              loader.remove();
+            }
+          }, 500);
+        }, 500);
+      }
+    }, 600);
+  }
   
   secretBtn.addEventListener('click', function(e) {
     e.preventDefault();
@@ -2039,17 +2141,7 @@ console.info('✨ PEAK UBG ready - Enhanced Edition with shortcuts!');
       if (h4) h4.textContent = '🔓 Access Granted';
       if (p) p.textContent = 'Loading advanced tools...';
       
-      setTimeout(() => {
-        disguise.style.transition = 'opacity 0.6s ease';
-        disguise.style.opacity = '0';
-        setTimeout(() => {
-          disguise.style.display = 'none';
-          peakRoot.style.display = 'flex';
-          peakRoot.classList.add('unlocked');
-          document.body.style.background = 'var(--bg-3)';
-          document.body.style.color = '#e6faff';
-        }, 600);
-      }, 800);
+      setTimeout(unlockInterface, 800);
     }
   });
   
@@ -2057,11 +2149,7 @@ console.info('✨ PEAK UBG ready - Enhanced Edition with shortcuts!');
   document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.shiftKey && e.key === 'E') {
       e.preventDefault();
-      disguise.style.display = 'none';
-      peakRoot.style.display = 'flex';
-      peakRoot.classList.add('unlocked');
-      document.body.style.background = 'var(--bg-3)';
-      document.body.style.color = '#e6faff';
+      unlockInterface();
     }
   });
 })();
