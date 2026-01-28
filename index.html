@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Educational Resources | Student Learning Portal</title>
 
-<meta name="description" content="PEAK UBG — neon dashboard, proxy hub, partners, and updates in a single page app." />
+<meta name="description" content="A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials." />
 <meta name="theme-color" content="#020308" />
 
 <!-- FONT -->
@@ -254,21 +254,134 @@
     .nav-items { flex-direction:row; gap:8px; overflow:auto; padding:0 6px; display:flex !important; }
     .nav-item { white-space:nowrap; padding:8px 12px; border-radius:999px; }
     .app-inner { margin-left:0; }
-  } /* Fix to ensure mouse is visible in the educational portal */
-#edu-disguise, 
-#edu-disguise *, 
-#secret-access, 
-#secret-access * {
-    cursor: auto !important;
-}
+  }
 
-/* Ensure the secret button looks clickable */
-#secret-access {
+  /* Educational Disguise Styles */
+  #edu-disguise { 
+    position: fixed; 
+    inset: 0; 
+    z-index: 999999; 
+    background: #f5f5f5; 
+    overflow-y: auto; 
+    display: block;
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+  
+  #edu-disguise * {
+    cursor: auto !important;
+  }
+  
+  #secret-access {
     cursor: pointer !important;
-}
+    transition: all 0.3s ease;
+  }
+  
+  #peak-root {
+    display: none;
+  }
+  
+  #peak-root.unlocked {
+    display: flex;
+  }
 </style>
 </head>
 <body>
+  <!-- EDUCATIONAL DISGUISE OVERLAY -->
+  <div id="edu-disguise">
+    <div style="max-width:1200px;margin:0 auto;padding:40px 20px;font-family:Georgia,serif;color:#333;">
+      <header style="text-align:center;margin-bottom:40px;border-bottom:3px solid #2c5aa0;padding-bottom:20px;">
+        <h1 style="font-size:42px;color:#2c5aa0;margin:0 0 10px 0;font-weight:normal;">Educational Resource Portal</h1>
+        <p style="font-size:18px;color:#666;margin:0;">A Comprehensive Learning Platform for Students</p>
+      </header>
+
+      <nav style="background:#2c5aa0;padding:15px;border-radius:8px;margin-bottom:30px;">
+        <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Home</a>
+          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Math Resources</a>
+          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Science</a>
+          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">History</a>
+          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Literature</a>
+        </div>
+      </nav>
+
+      <main style="display:grid;grid-template-columns:2fr 1fr;gap:30px;margin-bottom:30px;">
+        <div>
+          <article style="background:white;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;">
+            <h2 style="color:#2c5aa0;border-bottom:2px solid #e0e0e0;padding-bottom:10px;margin-top:0;">Welcome to Our Learning Center</h2>
+            <p style="line-height:1.8;color:#555;">Our educational platform provides students with access to high-quality learning materials across multiple subjects. We are committed to fostering academic excellence and supporting student success through comprehensive resources and study tools.</p>
+            
+            <h3 style="color:#2c5aa0;margin-top:25px;">Featured Study Areas</h3>
+            <ul style="line-height:2;color:#555;">
+              <li><strong>Mathematics:</strong> From basic algebra to advanced calculus</li>
+              <li><strong>Science:</strong> Biology, Chemistry, Physics, and Environmental Science</li>
+              <li><strong>History:</strong> World history, US history, and social studies</li>
+              <li><strong>Language Arts:</strong> Literature analysis and writing skills</li>
+              <li><strong>Test Preparation:</strong> SAT, ACT, and AP exam resources</li>
+            </ul>
+          </article>
+
+          <article style="background:white;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+            <h2 style="color:#2c5aa0;border-bottom:2px solid #e0e0e0;padding-bottom:10px;margin-top:0;">Study Tips for Success</h2>
+            <p style="line-height:1.8;color:#555;">Effective studying requires proper planning and organization. Here are some evidence-based strategies to improve your academic performance:</p>
+            
+            <div style="background:#f9f9f9;padding:20px;border-left:4px solid #2c5aa0;margin:20px 0;">
+              <h4 style="margin-top:0;color:#2c5aa0;">Key Study Strategies</h4>
+              <ol style="line-height:2;color:#555;">
+                <li>Create a dedicated study schedule and stick to it</li>
+                <li>Take regular breaks using the Pomodoro Technique</li>
+                <li>Use active recall and spaced repetition</li>
+                <li>Form study groups with classmates</li>
+                <li>Minimize distractions in your study environment</li>
+              </ol>
+            </div>
+            
+            <p style="line-height:1.8;color:#555;">Remember, consistent effort and the right approach are key to academic success. Our platform provides tools to help you implement these strategies effectively.</p>
+          </article>
+        </div>
+
+        <aside>
+          <div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;">
+            <h3 style="color:#2c5aa0;margin-top:0;font-size:18px;">Quick Links</h3>
+            <ul style="list-style:none;padding:0;margin:0;">
+              <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">📚 Study Guides</a></li>
+              <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">📝 Practice Tests</a></li>
+              <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">🎓 Tutoring</a></li>
+              <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">💡 Learning Tools</a></li>
+              <li style="padding:10px 0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">📊 Progress Tracking</a></li>
+            </ul>
+          </div>
+
+          <div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;">
+            <h3 style="color:#2c5aa0;margin-top:0;font-size:18px;">Important Resources</h3>
+            <div style="background:#f0f7ff;padding:15px;border-radius:4px;margin-bottom:10px;">
+              <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Academic Calendar</h4>
+              <p style="margin:0;font-size:13px;color:#555;">View upcoming assignment deadlines and exam dates</p>
+            </div>
+            <div style="background:#f0f7ff;padding:15px;border-radius:4px;margin-bottom:10px;">
+              <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Citation Generator</h4>
+              <p style="margin:0;font-size:13px;color:#555;">Create MLA, APA, and Chicago style citations</p>
+            </div>
+            <div id="secret-access" style="background:#f0f7ff;padding:15px;border-radius:4px;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='#e3f2fd'" onmouseout="this.style.background='#f0f7ff'">
+              <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Advanced Tools</h4>
+              <p style="margin:0;font-size:13px;color:#555;">Access specialized learning utilities</p>
+            </div>
+          </div>
+
+          <div style="background:#2c5aa0;color:white;padding:20px;border-radius:8px;text-align:center;">
+            <h3 style="margin:0 0 10px 0;font-size:18px;">Need Help?</h3>
+            <p style="margin:0 0 15px 0;font-size:13px;">Contact our support team for assistance</p>
+            <button style="background:white;color:#2c5aa0;border:none;padding:10px 20px;border-radius:4px;font-weight:bold;cursor:pointer;">Contact Support</button>
+          </div>
+        </aside>
+      </main>
+
+      <footer style="background:#2c5aa0;color:white;padding:20px;border-radius:8px;text-align:center;">
+        <p style="margin:0;font-size:14px;">© 2026 Educational Resource Portal | Committed to Academic Excellence</p>
+        <p style="margin:8px 0 0 0;font-size:12px;opacity:0.8;">Providing quality educational resources for students worldwide</p>
+      </footer>
+    </div>
+  </div>
+
   <a href="#peak-app" class="skip-link">Skip to content</a>
 
   <div id="peak-root">
@@ -1894,158 +2007,66 @@ $('#shortcutsOverlay')?.addEventListener('click', (e) => {
 
 console.info('✨ PEAK UBG ready - Enhanced Edition with shortcuts!');
 
-})(); // End of main IIFE
-</script>
-</body><!-- 
-==================================================================
-EDUCATIONAL DISGUISE - ADD THIS RIGHT AFTER <body> TAG
-==================================================================
-INSTRUCTIONS:
-1. Open your peak-ubg HTML file
-2. Find the <body> tag (around line 262)
-3. Paste ALL of this code RIGHT AFTER <body>
-4. Save the file
-5. Change the <title> tag to: Educational Resources | Student Learning Portal
-==================================================================
--->
-
-<!-- EDUCATIONAL DISGUISE OVERLAY -->
-<div id="edu-disguise" style="position:fixed;inset:0;z-index:999999;background:#f5f5f5;overflow-y:auto;display:block;">
-  <div style="max-width:1200px;margin:0 auto;padding:40px 20px;font-family:Georgia,serif;color:#333;">
-    <header style="text-align:center;margin-bottom:40px;border-bottom:3px solid #2c5aa0;padding-bottom:20px;">
-      <h1 style="font-size:42px;color:#2c5aa0;margin:0 0 10px 0;font-weight:normal;">Educational Resource Portal</h1>
-      <p style="font-size:18px;color:#666;margin:0;">A Comprehensive Learning Platform for Students</p>
-    </header>
-
-    <nav style="background:#2c5aa0;padding:15px;border-radius:8px;margin-bottom:30px;">
-      <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
-        <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Home</a>
-        <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Math Resources</a>
-        <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Science</a>
-        <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">History</a>
-        <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Literature</a>
-      </div>
-    </nav>
-
-    <main style="display:grid;grid-template-columns:2fr 1fr;gap:30px;margin-bottom:30px;">
-      <div>
-        <article style="background:white;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;">
-          <h2 style="color:#2c5aa0;border-bottom:2px solid #e0e0e0;padding-bottom:10px;margin-top:0;">Welcome to Our Learning Center</h2>
-          <p style="line-height:1.8;color:#555;">Our educational platform provides students with access to high-quality learning materials across multiple subjects. We are committed to fostering academic excellence and supporting student success through comprehensive resources and study tools.</p>
-          
-          <h3 style="color:#2c5aa0;margin-top:25px;">Featured Study Areas</h3>
-          <ul style="line-height:2;color:#555;">
-            <li><strong>Mathematics:</strong> From basic algebra to advanced calculus</li>
-            <li><strong>Science:</strong> Biology, Chemistry, Physics, and Environmental Science</li>
-            <li><strong>History:</strong> World history, US history, and social studies</li>
-            <li><strong>Language Arts:</strong> Literature analysis and writing skills</li>
-            <li><strong>Test Preparation:</strong> SAT, ACT, and AP exam resources</li>
-          </ul>
-        </article>
-
-        <article style="background:white;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-          <h2 style="color:#2c5aa0;border-bottom:2px solid #e0e0e0;padding-bottom:10px;margin-top:0;">Study Tips for Success</h2>
-          <p style="line-height:1.8;color:#555;">Effective studying requires proper planning and organization. Here are some evidence-based strategies to improve your academic performance:</p>
-          
-          <div style="background:#f9f9f9;padding:20px;border-left:4px solid #2c5aa0;margin:20px 0;">
-            <h4 style="margin-top:0;color:#2c5aa0;">Key Study Strategies</h4>
-            <ol style="line-height:2;color:#555;">
-              <li>Create a dedicated study schedule and stick to it</li>
-              <li>Take regular breaks using the Pomodoro Technique</li>
-              <li>Use active recall and spaced repetition</li>
-              <li>Form study groups with classmates</li>
-              <li>Minimize distractions in your study environment</li>
-            </ol>
-          </div>
-          
-          <p style="line-height:1.8;color:#555;">Remember, consistent effort and the right approach are key to academic success. Our platform provides tools to help you implement these strategies effectively.</p>
-        </article>
-      </div>
-
-      <aside>
-        <div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;">
-          <h3 style="color:#2c5aa0;margin-top:0;font-size:18px;">Quick Links</h3>
-          <ul style="list-style:none;padding:0;margin:0;">
-            <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">📚 Study Guides</a></li>
-            <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">📝 Practice Tests</a></li>
-            <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">🎓 Tutoring</a></li>
-            <li style="padding:10px 0;border-bottom:1px solid #e0e0e0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">💡 Learning Tools</a></li>
-            <li style="padding:10px 0;"><a href="#" style="color:#2c5aa0;text-decoration:none;">📊 Progress Tracking</a></li>
-          </ul>
-        </div>
-
-        <div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:20px;">
-          <h3 style="color:#2c5aa0;margin-top:0;font-size:18px;">Important Resources</h3>
-          <div style="background:#f0f7ff;padding:15px;border-radius:4px;margin-bottom:10px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Academic Calendar</h4>
-            <p style="margin:0;font-size:13px;color:#555;">View upcoming assignment deadlines and exam dates</p>
-          </div>
-          <div style="background:#f0f7ff;padding:15px;border-radius:4px;margin-bottom:10px;">
-            <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Citation Generator</h4>
-            <p style="margin:0;font-size:13px;color:#555;">Create MLA, APA, and Chicago style citations</p>
-          </div>
-          <div id="secret-access" style="background:#f0f7ff;padding:15px;border-radius:4px;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='#e3f2fd'" onmouseout="this.style.background='#f0f7ff'">
-            <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Advanced Tools</h4>
-            <p style="margin:0;font-size:13px;color:#555;">Access specialized learning utilities</p>
-          </div>
-        </div>
-
-        <div style="background:#2c5aa0;color:white;padding:20px;border-radius:8px;text-align:center;">
-          <h3 style="margin:0 0 10px 0;font-size:18px;">Need Help?</h3>
-          <p style="margin:0 0 15px 0;font-size:13px;">Contact our support team for assistance</p>
-          <button style="background:white;color:#2c5aa0;border:none;padding:10px 20px;border-radius:4px;font-weight:bold;cursor:pointer;">Contact Support</button>
-        </div>
-      </aside>
-    </main>
-
-    <footer style="background:#2c5aa0;color:white;padding:20px;border-radius:8px;text-align:center;">
-      <p style="margin:0;font-size:14px;">© 2026 Educational Resource Portal | Committed to Academic Excellence</p>
-      <p style="margin:8px 0 0 0;font-size:12px;opacity:0.8;">Providing quality educational resources for students worldwide</p>
-    </footer>
-  </div>
-</div>
-
-<script>
-(function(){
+/* ========= Educational Disguise Access ========= */
+(function initEducationalDisguise() {
   let clickCount = 0;
   const secretBtn = document.getElementById('secret-access');
   const disguise = document.getElementById('edu-disguise');
+  const peakRoot = document.getElementById('peak-root');
   
-  if (secretBtn && disguise) {
-    secretBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      clickCount++;
-      
-      if (clickCount === 1) {
-        this.style.background = '#fff3cd';
-        this.querySelector('p').textContent = 'Click again to verify access...';
-      } else if (clickCount === 2) {
-        this.style.background = '#d4edda';
-        this.querySelector('h4').textContent = '🔓 Access Granted';
-        this.querySelector('p').textContent = 'Loading advanced tools...';
-        
-        setTimeout(() => {
-          disguise.style.transition = 'opacity 0.6s ease';
-          disguise.style.opacity = '0';
-          setTimeout(() => {
-            disguise.style.display = 'none';
-            disguise.remove();
-          }, 600);
-        }, 800);
-      }
-    });
+  if (!secretBtn || !disguise || !peakRoot) return;
+  
+  // Hide main content initially
+  peakRoot.style.display = 'none';
+  
+  secretBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    clickCount++;
     
-    // Keyboard shortcut: Ctrl+Shift+E
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.shiftKey && e.key === 'E') {
-        e.preventDefault();
-        disguise.style.display = 'none';
-        disguise.remove();
-      }
-    });
-  }
+    if (clickCount === 1) {
+      this.style.background = '#fff3cd';
+      this.style.border = '2px solid #ffc107';
+      const p = this.querySelector('p');
+      if (p) p.textContent = 'Click again to verify access...';
+      const h4 = this.querySelector('h4');
+      if (h4) h4.textContent = '🔐 Verification Required';
+    } else if (clickCount === 2) {
+      this.style.background = '#d4edda';
+      this.style.border = '2px solid #28a745';
+      const h4 = this.querySelector('h4');
+      const p = this.querySelector('p');
+      if (h4) h4.textContent = '🔓 Access Granted';
+      if (p) p.textContent = 'Loading advanced tools...';
+      
+      setTimeout(() => {
+        disguise.style.transition = 'opacity 0.6s ease';
+        disguise.style.opacity = '0';
+        setTimeout(() => {
+          disguise.style.display = 'none';
+          peakRoot.style.display = 'flex';
+          peakRoot.classList.add('unlocked');
+          document.body.style.background = 'var(--bg-3)';
+          document.body.style.color = '#e6faff';
+        }, 600);
+      }, 800);
+    }
+  });
+  
+  // Keyboard shortcut: Ctrl+Shift+E to bypass
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+      e.preventDefault();
+      disguise.style.display = 'none';
+      peakRoot.style.display = 'flex';
+      peakRoot.classList.add('unlocked');
+      document.body.style.background = 'var(--bg-3)';
+      document.body.style.color = '#e6faff';
+    }
+  });
 })();
-</script>
 
-<!-- END OF EDUCATIONAL DISGUISE -->
+})(); // End of main IIFE
+</script>
+</body>
 </html>
