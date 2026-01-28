@@ -6,9 +6,11 @@
 <title>Educational Resources | Student Learning Portal</title>
 
 <meta name="description" content="A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials." />
-<meta name="keywords" content="education, learning, student resources, study tools, academic support, online learning, educational portal" />
-<meta name="author" content="Educational Resource Portal" />
+<meta name="keywords" content="education, learning, student resources, study tools, academic support, online learning, educational portal, homework help, study guides, practice tests" />
+<meta name="author" content="Student Learning Portal" />
 <meta name="robots" content="index, follow" />
+<meta name="language" content="English" />
+<meta name="revisit-after" content="7 days" />
 <meta name="theme-color" content="#2c5aa0" />
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
 <meta property="og:title" content="Educational Resources | Student Learning Portal" />
@@ -26,7 +28,12 @@
   "@type": "EducationalOrganization",
   "name": "Student Learning Portal",
   "description": "A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials.",
-  "url": "https://example.com",
+  "url": "https://studentlearningportal.edu",
+  "logo": "https://studentlearningportal.edu/logo.png",
+  "sameAs": [
+    "https://www.facebook.com/studentlearningportal",
+    "https://twitter.com/studentlearning"
+  ],
   "educationalUse": "Educational",
   "audience": {
     "@type": "EducationalAudience",
@@ -334,10 +341,19 @@
   body:not(.unlocked) #settingsPanel,
   body:not(.unlocked) #shortcutsOverlay,
   body:not(.unlocked) #peak-loader,
+  body:not(.unlocked) #peak-root,
   body:not(.unlocked) #peak-root * {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  
+  /* Show cursor only when unlocked */
+  body.unlocked #customCursor {
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: none !important;
   }
   
   /* Ensure educational page is always visible when locked */
@@ -362,10 +378,25 @@
   <!-- EDUCATIONAL DISGUISE OVERLAY -->
   <div id="edu-disguise">
     <div style="max-width:1200px;margin:0 auto;padding:40px 20px;font-family:Georgia,serif;color:#333;">
-      <header style="text-align:center;margin-bottom:40px;border-bottom:3px solid #2c5aa0;padding-bottom:20px;">
+      <header style="text-align:center;margin-bottom:40px;border-bottom:3px solid #2c5aa0;padding-bottom:20px;background:linear-gradient(180deg, rgba(44,90,160,0.05) 0%, transparent 100%);padding:30px 20px;">
+        <div style="display:inline-block;background:#2c5aa0;color:white;padding:12px 24px;border-radius:50px;margin-bottom:15px;font-size:14px;font-weight:600;">FREE EDUCATIONAL RESOURCES</div>
         <h1 style="font-size:42px;color:#2c5aa0;margin:0 0 10px 0;font-weight:normal;">Student Learning Portal</h1>
         <p style="font-size:18px;color:#666;margin:0;">A Comprehensive Educational Resource Platform</p>
         <p style="font-size:14px;color:#888;margin:8px 0 0 0;">Supporting Academic Excellence Since 2020</p>
+        <div style="margin-top:20px;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
+          <div style="background:white;padding:10px 20px;border-radius:20px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+            <div style="font-size:24px;font-weight:bold;color:#2c5aa0;">50K+</div>
+            <div style="font-size:12px;color:#666;">Students Served</div>
+          </div>
+          <div style="background:white;padding:10px 20px;border-radius:20px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+            <div style="font-size:24px;font-weight:bold;color:#2c5aa0;">100+</div>
+            <div style="font-size:12px;color:#666;">Study Resources</div>
+          </div>
+          <div style="background:white;padding:10px 20px;border-radius:20px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+            <div style="font-size:24px;font-weight:bold;color:#2c5aa0;">24/7</div>
+            <div style="font-size:12px;color:#666;">Available</div>
+          </div>
+        </div>
       </header>
 
       <nav style="background:#2c5aa0;padding:15px;border-radius:8px;margin-bottom:30px;" role="navigation" aria-label="Main navigation">
@@ -416,13 +447,26 @@
             <h2 style="color:#2c5aa0;border-bottom:2px solid #e0e0e0;padding-bottom:10px;margin-top:0;">Academic Resources</h2>
             <p style="line-height:1.8;color:#555;margin-bottom:15px;">Our platform offers a wide range of resources to support your learning journey:</p>
             <ul style="line-height:2;color:#555;">
-              <li><strong>Interactive Calculators:</strong> Math and science calculation tools</li>
+              <li><strong>Interactive Calculators:</strong> Math and science calculation tools for homework and exams</li>
               <li><strong>Study Timers:</strong> Pomodoro technique timers for focused study sessions</li>
-              <li><strong>Unit Converters:</strong> Convert between different measurement units</li>
-              <li><strong>Citation Tools:</strong> Generate proper citations for research papers</li>
-              <li><strong>Progress Tracking:</strong> Monitor your study progress and achievements</li>
+              <li><strong>Unit Converters:</strong> Convert between different measurement units (metric, imperial, etc.)</li>
+              <li><strong>Citation Tools:</strong> Generate proper citations for research papers in MLA, APA, and Chicago formats</li>
+              <li><strong>Progress Tracking:</strong> Monitor your study progress and achievements over time</li>
+              <li><strong>Note-Taking Tools:</strong> Digital tools to help organize your study notes</li>
             </ul>
-            <p style="line-height:1.8;color:#555;margin-top:15px;">All tools are designed with student success in mind and are free to use for educational purposes.</p>
+            <p style="line-height:1.8;color:#555;margin-top:15px;">All tools are designed with student success in mind and are free to use for educational purposes. Our platform is regularly updated with new features based on student feedback.</p>
+          </article>
+          
+          <article style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:30px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);margin-top:20px;">
+            <h2 style="color:white;border-bottom:2px solid rgba(255,255,255,0.3);padding-bottom:10px;margin-top:0;">🎓 Student Success Stories</h2>
+            <div style="background:rgba(255,255,255,0.1);padding:15px;border-radius:6px;margin-top:15px;backdrop-filter:blur(10px);">
+              <p style="margin:0;line-height:1.8;font-style:italic;">"This platform helped me improve my grades significantly. The study tools and resources made it so much easier to stay organized and focused."</p>
+              <p style="margin:10px 0 0 0;font-size:12px;opacity:0.9;">- Sarah M., High School Student</p>
+            </div>
+            <div style="background:rgba(255,255,255,0.1);padding:15px;border-radius:6px;margin-top:15px;backdrop-filter:blur(10px);">
+              <p style="margin:0;line-height:1.8;font-style:italic;">"The interactive calculators and unit converters saved me so much time on my physics homework. Highly recommend!"</p>
+              <p style="margin:10px 0 0 0;font-size:12px;opacity:0.9;">- James T., College Student</p>
+            </div>
           </article>
         </div>
 
@@ -448,9 +492,10 @@
               <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Citation Generator</h4>
               <p style="margin:0;font-size:13px;color:#555;">Create MLA, APA, and Chicago style citations</p>
             </div>
-            <div id="secret-access" style="background:#f0f7ff;padding:15px;border-radius:4px;cursor:pointer;transition:all 0.3s;border:1px solid #b3d9ff;" onmouseover="this.style.background='#e3f2fd';this.style.borderColor='#2c5aa0';" onmouseout="this.style.background='#f0f7ff';this.style.borderColor='#b3d9ff';">
-              <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;font-weight:600;">Interactive Learning Tools</h4>
+            <div id="secret-access" style="background:#f0f7ff;padding:15px;border-radius:4px;cursor:pointer;transition:all 0.3s;border:1px solid #b3d9ff;position:relative;" onmouseover="this.style.background='#e3f2fd';this.style.borderColor='#2c5aa0';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 8px rgba(44,90,160,0.2)';" onmouseout="this.style.background='#f0f7ff';this.style.borderColor='#b3d9ff';this.style.transform='translateY(0)';this.style.boxShadow='none';">
+              <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;font-weight:600;">📊 Interactive Learning Tools</h4>
               <p style="margin:0;font-size:13px;color:#555;">Access calculators, timers, and study aids</p>
+              <span style="position:absolute;top:10px;right:10px;font-size:12px;color:#2c5aa0;opacity:0.6;">→</span>
             </div>
           </div>
 
@@ -2039,9 +2084,13 @@ function initAllTools() {
 }
 
 /* ========= Custom Cursor ========= */
-(function customCursor() {
+window.initCustomCursor = function initCustomCursor() {
+  if (!document.body.classList.contains('unlocked')) return;
+  
   const cursorEl = $('#customCursor');
   const body = document.body;
+  
+  if (!cursorEl) return;
   
   if ('ontouchstart' in window || window.matchMedia('(pointer:coarse)').matches) {
     cursorEl.style.display = 'none';
@@ -2050,31 +2099,40 @@ function initAllTools() {
 
   body.classList.add('custom-cursor-enabled');
   cursorEl.style.display = 'block';
+  cursorEl.style.opacity = '0';
 
   let mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
   let cx = mouseX, cy = mouseY;
   const ease = 0.18;
 
   document.addEventListener('mousemove', (e) => {
+    if (!document.body.classList.contains('unlocked')) return;
     mouseX = e.clientX;
     mouseY = e.clientY;
     cursorEl.style.opacity = '1';
   });
 
-  document.addEventListener('mouseenter', ()=> cursorEl.style.opacity = '1');
+  document.addEventListener('mouseenter', ()=> {
+    if (document.body.classList.contains('unlocked')) cursorEl.style.opacity = '1';
+  });
   document.addEventListener('mouseleave', ()=> cursorEl.style.opacity = '0');
 
-  document.addEventListener('mousedown', ()=> cursorEl.classList.add('cursor-click'));
+  document.addEventListener('mousedown', ()=> {
+    if (document.body.classList.contains('unlocked')) cursorEl.classList.add('cursor-click');
+  });
   document.addEventListener('mouseup', ()=> cursorEl.classList.remove('cursor-click'));
 
   const hoverTargetsSelector = 'a,button,input,textarea,select,summary,[role="button"],.icon-btn,.proxy-toggle,.fav-btn,.nav-item';
   function bindHoverState(el){
-    el.addEventListener('mouseenter', ()=> cursorEl.classList.add('cursor-hover'));
+    el.addEventListener('mouseenter', ()=> {
+      if (document.body.classList.contains('unlocked')) cursorEl.classList.add('cursor-hover');
+    });
     el.addEventListener('mouseleave', ()=> cursorEl.classList.remove('cursor-hover'));
   }
   $$(hoverTargetsSelector).forEach(bindHoverState);
 
   function raf() {
+    if (!document.body.classList.contains('unlocked')) return;
     cx += (mouseX - cx) * ease;
     cy += (mouseY - cy) * ease;
     cursorEl.style.left = cx + 'px';
@@ -2087,7 +2145,12 @@ function initAllTools() {
     cursorEl.style.display = 'none';
     body.classList.remove('custom-cursor-enabled');
   }
-})();
+};
+
+// Only initialize if already unlocked
+if (document.body.classList.contains('unlocked')) {
+  setTimeout(() => window.initCustomCursor(), 100);
+}
 
 /* ========= Keyboard Shortcuts ========= */
 document.addEventListener('keydown', (e) => {
@@ -2192,10 +2255,31 @@ if (document.body.classList.contains('unlocked')) {
       }
       if (scanlines) scanlines.style.display = 'block';
       
+      // Show cursor and settings
+      const cursor = document.getElementById('customCursor');
+      const settingsBtn = document.getElementById('settingsBtn');
+      if (cursor) cursor.style.display = 'block';
+      if (settingsBtn) settingsBtn.style.display = 'inline-flex';
+      
       // Reinitialize starfield
       if (window.initStarfield && typeof window.initStarfield === 'function') {
         setTimeout(() => window.initStarfield(), 100);
       }
+      
+      // Initialize custom cursor (check user preference)
+      setTimeout(() => {
+        try {
+          const cursorEnabled = localStorage.getItem('peak-cursor-enabled-v1') !== '0';
+          if (cursorEnabled && window.initCustomCursor && typeof window.initCustomCursor === 'function') {
+            window.initCustomCursor();
+          }
+        } catch(e) {
+          // Fallback: initialize anyway
+          if (window.initCustomCursor && typeof window.initCustomCursor === 'function') {
+            window.initCustomCursor();
+          }
+        }
+      }, 300);
       
       // Reinitialize loader to hide it
       const loader = document.getElementById('peak-loader');
