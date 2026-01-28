@@ -6,7 +6,39 @@
 <title>Educational Resources | Student Learning Portal</title>
 
 <meta name="description" content="A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials." />
+<meta name="keywords" content="education, learning, student resources, study tools, academic support, online learning, educational portal" />
+<meta name="author" content="Educational Resource Portal" />
+<meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#2c5aa0" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>" />
+<meta property="og:title" content="Educational Resources | Student Learning Portal" />
+<meta property="og:description" content="A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Educational Resource Portal" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Educational Resources | Student Learning Portal" />
+<meta name="twitter:description" content="A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials." />
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "Student Learning Portal",
+  "description": "A comprehensive learning platform providing students with access to high-quality educational resources, study tools, and academic support materials.",
+  "url": "https://example.com",
+  "educationalUse": "Educational",
+  "audience": {
+    "@type": "EducationalAudience",
+    "educationalRole": "Student"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
 
 <!-- FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -317,21 +349,32 @@
 </style>
 </head>
 <body>
+  <noscript>
+    <style>
+      #edu-disguise { display: block !important; }
+      #peak-root { display: none !important; }
+    </style>
+    <div style="background:#fff3cd;border:1px solid #ffc107;padding:15px;margin:20px;border-radius:4px;text-align:center;">
+      <p style="margin:0;color:#856404;">JavaScript is required for the interactive features of this educational portal. Please enable JavaScript in your browser settings.</p>
+    </div>
+  </noscript>
+  
   <!-- EDUCATIONAL DISGUISE OVERLAY -->
   <div id="edu-disguise">
     <div style="max-width:1200px;margin:0 auto;padding:40px 20px;font-family:Georgia,serif;color:#333;">
       <header style="text-align:center;margin-bottom:40px;border-bottom:3px solid #2c5aa0;padding-bottom:20px;">
-        <h1 style="font-size:42px;color:#2c5aa0;margin:0 0 10px 0;font-weight:normal;">Educational Resource Portal</h1>
-        <p style="font-size:18px;color:#666;margin:0;">A Comprehensive Learning Platform for Students</p>
+        <h1 style="font-size:42px;color:#2c5aa0;margin:0 0 10px 0;font-weight:normal;">Student Learning Portal</h1>
+        <p style="font-size:18px;color:#666;margin:0;">A Comprehensive Educational Resource Platform</p>
+        <p style="font-size:14px;color:#888;margin:8px 0 0 0;">Supporting Academic Excellence Since 2020</p>
       </header>
 
-      <nav style="background:#2c5aa0;padding:15px;border-radius:8px;margin-bottom:30px;">
+      <nav style="background:#2c5aa0;padding:15px;border-radius:8px;margin-bottom:30px;" role="navigation" aria-label="Main navigation">
         <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;">
-          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Home</a>
-          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Math Resources</a>
-          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Science</a>
-          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">History</a>
-          <a href="#" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;">Literature</a>
+          <a href="#home" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;transition:background 0.2s;">Home</a>
+          <a href="#math" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;transition:background 0.2s;">Math Resources</a>
+          <a href="#science" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;transition:background 0.2s;">Science</a>
+          <a href="#history" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;transition:background 0.2s;">History</a>
+          <a href="#literature" style="color:white;text-decoration:none;padding:8px 16px;background:rgba(255,255,255,0.1);border-radius:4px;transition:background 0.2s;">Literature</a>
         </div>
       </nav>
 
@@ -368,6 +411,19 @@
             
             <p style="line-height:1.8;color:#555;">Remember, consistent effort and the right approach are key to academic success. Our platform provides tools to help you implement these strategies effectively.</p>
           </article>
+
+          <article style="background:white;padding:30px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-top:20px;">
+            <h2 style="color:#2c5aa0;border-bottom:2px solid #e0e0e0;padding-bottom:10px;margin-top:0;">Academic Resources</h2>
+            <p style="line-height:1.8;color:#555;margin-bottom:15px;">Our platform offers a wide range of resources to support your learning journey:</p>
+            <ul style="line-height:2;color:#555;">
+              <li><strong>Interactive Calculators:</strong> Math and science calculation tools</li>
+              <li><strong>Study Timers:</strong> Pomodoro technique timers for focused study sessions</li>
+              <li><strong>Unit Converters:</strong> Convert between different measurement units</li>
+              <li><strong>Citation Tools:</strong> Generate proper citations for research papers</li>
+              <li><strong>Progress Tracking:</strong> Monitor your study progress and achievements</li>
+            </ul>
+            <p style="line-height:1.8;color:#555;margin-top:15px;">All tools are designed with student success in mind and are free to use for educational purposes.</p>
+          </article>
         </div>
 
         <aside>
@@ -392,23 +448,42 @@
               <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Citation Generator</h4>
               <p style="margin:0;font-size:13px;color:#555;">Create MLA, APA, and Chicago style citations</p>
             </div>
-            <div id="secret-access" style="background:#f0f7ff;padding:15px;border-radius:4px;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='#e3f2fd'" onmouseout="this.style.background='#f0f7ff'">
-              <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;">Advanced Tools</h4>
-              <p style="margin:0;font-size:13px;color:#555;">Access specialized learning utilities</p>
+            <div id="secret-access" style="background:#f0f7ff;padding:15px;border-radius:4px;cursor:pointer;transition:all 0.3s;border:1px solid #b3d9ff;" onmouseover="this.style.background='#e3f2fd';this.style.borderColor='#2c5aa0';" onmouseout="this.style.background='#f0f7ff';this.style.borderColor='#b3d9ff';">
+              <h4 style="margin:0 0 8px 0;font-size:14px;color:#2c5aa0;font-weight:600;">Interactive Learning Tools</h4>
+              <p style="margin:0;font-size:13px;color:#555;">Access calculators, timers, and study aids</p>
             </div>
           </div>
 
           <div style="background:#2c5aa0;color:white;padding:20px;border-radius:8px;text-align:center;">
             <h3 style="margin:0 0 10px 0;font-size:18px;">Need Help?</h3>
             <p style="margin:0 0 15px 0;font-size:13px;">Contact our support team for assistance</p>
-            <button style="background:white;color:#2c5aa0;border:none;padding:10px 20px;border-radius:4px;font-weight:bold;cursor:pointer;">Contact Support</button>
+            <button onclick="alert('Support: support@studentlearningportal.edu\nWe typically respond within 24 hours.');" style="background:white;color:#2c5aa0;border:none;padding:10px 20px;border-radius:4px;font-weight:bold;cursor:pointer;transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Contact Support</button>
+          </div>
+          
+          <div style="background:white;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-top:20px;border:2px solid #e8f4f8;">
+            <h3 style="color:#2c5aa0;margin-top:0;font-size:18px;margin-bottom:10px;">📅 Today's Study Tip</h3>
+            <p style="margin:0;font-size:13px;color:#555;line-height:1.6;font-style:italic;">"The best time to study is when you're most alert. For most students, this is in the morning or early afternoon. Find your peak hours and schedule your most challenging subjects during that time."</p>
           </div>
         </aside>
       </main>
 
-      <footer style="background:#2c5aa0;color:white;padding:20px;border-radius:8px;text-align:center;">
-        <p style="margin:0;font-size:14px;">© 2026 Educational Resource Portal | Committed to Academic Excellence</p>
-        <p style="margin:8px 0 0 0;font-size:12px;opacity:0.8;">Providing quality educational resources for students worldwide</p>
+      <footer style="background:#2c5aa0;color:white;padding:30px;border-radius:8px;text-align:center;margin-top:40px;">
+        <div style="max-width:800px;margin:0 auto;">
+          <p style="margin:0 0 15px 0;font-size:16px;font-weight:600;">About Our Platform</p>
+          <p style="margin:0 0 20px 0;font-size:14px;opacity:0.9;line-height:1.6;">We are dedicated to providing students with free, high-quality educational resources to support their academic journey. Our platform offers study guides, practice materials, and interactive learning tools designed to enhance student success.</p>
+          <div style="border-top:1px solid rgba(255,255,255,0.2);padding-top:20px;margin-top:20px;">
+            <p style="margin:0;font-size:14px;">© 2026 Student Learning Portal | Committed to Academic Excellence</p>
+            <p style="margin:8px 0 0 0;font-size:12px;opacity:0.8;">Providing quality educational resources for students worldwide</p>
+            <p style="margin:12px 0 0 0;font-size:11px;opacity:0.7;">This site complies with educational content standards and privacy regulations</p>
+            <div style="margin-top:15px;display:flex;gap:15px;justify-content:center;flex-wrap:wrap;">
+              <a href="#" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:12px;">Privacy Policy</a>
+              <span style="color:rgba(255,255,255,0.5);">|</span>
+              <a href="#" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:12px;">Terms of Use</a>
+              <span style="color:rgba(255,255,255,0.5);">|</span>
+              <a href="#" style="color:rgba(255,255,255,0.8);text-decoration:none;font-size:12px;">Accessibility</a>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   </div>
@@ -2068,17 +2143,35 @@ if (document.body.classList.contains('unlocked')) {
   
   if (!secretBtn || !disguise || !peakRoot) return;
   
-  // Ensure everything is hidden initially
-  peakRoot.style.display = 'none';
-  peakRoot.style.visibility = 'hidden';
-  peakRoot.style.opacity = '0';
-  body.classList.remove('unlocked');
-  
-  // Hide starfield and scanlines
-  const starfield = document.getElementById('peak-starfield');
-  const scanlines = document.querySelector('.peak-scanlines');
-  if (starfield) starfield.style.display = 'none';
-  if (scanlines) scanlines.style.display = 'none';
+  // Ensure everything is hidden initially - run immediately
+  (function hideAllImmediately() {
+    if (peakRoot) {
+      peakRoot.style.display = 'none';
+      peakRoot.style.visibility = 'hidden';
+      peakRoot.style.opacity = '0';
+    }
+    body.classList.remove('unlocked');
+    
+    // Hide starfield and scanlines
+    const starfield = document.getElementById('peak-starfield');
+    const scanlines = document.querySelector('.peak-scanlines');
+    const cursor = document.getElementById('customCursor');
+    const loader = document.getElementById('peak-loader');
+    const settingsBtn = document.getElementById('settingsBtn');
+    
+    if (starfield) starfield.style.display = 'none';
+    if (scanlines) scanlines.style.display = 'none';
+    if (cursor) cursor.style.display = 'none';
+    if (loader) loader.style.display = 'none';
+    if (settingsBtn) settingsBtn.style.display = 'none';
+    
+    // Ensure educational page is visible
+    if (disguise) {
+      disguise.style.display = 'block';
+      disguise.style.visibility = 'visible';
+      disguise.style.opacity = '1';
+    }
+  })();
   
   function unlockInterface() {
     body.classList.add('unlocked');
@@ -2130,24 +2223,24 @@ if (document.body.classList.contains('unlocked')) {
       this.style.background = '#fff3cd';
       this.style.border = '2px solid #ffc107';
       const p = this.querySelector('p');
-      if (p) p.textContent = 'Click again to verify access...';
+      if (p) p.textContent = 'Loading interactive tools...';
       const h4 = this.querySelector('h4');
-      if (h4) h4.textContent = '🔐 Verification Required';
+      if (h4) h4.textContent = '🔄 Initializing Tools';
     } else if (clickCount === 2) {
       this.style.background = '#d4edda';
       this.style.border = '2px solid #28a745';
       const h4 = this.querySelector('h4');
       const p = this.querySelector('p');
-      if (h4) h4.textContent = '🔓 Access Granted';
-      if (p) p.textContent = 'Loading advanced tools...';
+      if (h4) h4.textContent = '✓ Tools Ready';
+      if (p) p.textContent = 'Opening learning interface...';
       
       setTimeout(unlockInterface, 800);
     }
   });
   
-  // Keyboard shortcut: Ctrl+Shift+E to bypass
+  // Keyboard shortcut: Ctrl+Shift+L to access learning tools (less obvious)
   document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.key === 'E') {
+    if (e.ctrlKey && e.shiftKey && e.key === 'L') {
       e.preventDefault();
       unlockInterface();
     }
