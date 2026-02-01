@@ -242,17 +242,31 @@ kbd{display:inline-block;background:var(--bg3);border:1px solid var(--border);bo
 .clip-paste{padding:4px 10px;border-radius:6px;background:rgba(0,217,255,.08);border:1px solid var(--border-acc);color:var(--acc);font-size:11px;cursor:pointer;transition:background .18s;font-family:'Share Tech',sans-serif;}
 .clip-paste:hover{background:rgba(0,217,255,.18);}
 
-/* ─── GAME SECTION ─── */
-.game-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;}
-.game-container{width:100%;max-width:960px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative;}
-.game-container iframe{width:100%;aspect-ratio:16/9;border:none;display:block;}
-.game-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--bg3);z-index:2;transition:opacity .4s,visibility .4s;}
-.game-loading.hide{opacity:0;pointer-events:none;visibility:hidden;}
-.game-loading .gl-icon{font-size:40px;animation:glPulse .9s ease infinite;}
+/* ─── GAME PICKER ─── */
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.game-tile{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 12px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:border-color .18s,transform .15s,box-shadow .18s;text-decoration:none;will-change:transform;}
+.game-tile:hover{border-color:var(--border-acc);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.3);}
+.game-tile .gt-icon{font-size:32px;line-height:1;}
+.game-tile .gt-name{font-size:12px;font-weight:600;color:var(--txt);text-align:center;font-family:'Share Tech',sans-serif;line-height:1.3;}
+.game-tile .gt-tag{font-size:9px;color:var(--txt2);font-family:'Share Tech Mono',monospace;text-transform:uppercase;letter-spacing:.06em;}
+/* ─── GAME MODAL ─── */
+.gm-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:90;opacity:0;pointer-events:none;transition:opacity .22s;}
+.gm-bg.show{opacity:1;pointer-events:auto;}
+.gm-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-52%);z-index:91;width:92%;max-width:900px;background:var(--bg2);border:1px solid var(--border-acc);border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.7);transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .22s;opacity:0;pointer-events:none;}
+.gm-modal.show{transform:translate(-50%,-50%);opacity:1;pointer-events:auto;}
+.gm-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);}
+.gm-head h3{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--txt);letter-spacing:.04em;}
+.gm-head-btns{display:flex;gap:6px;}
+.gm-btn{width:32px;height:32px;border-radius:8px;background:transparent;border:1px solid var(--border);color:var(--txt2);cursor:pointer;font-size:15px;transition:background .18s,color .18s;display:flex;align-items:center;justify-content:center;}
+.gm-btn:hover{background:rgba(255,255,255,.06);color:var(--txt);}
+.gm-frame-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+.gm-frame-wrap iframe{width:100%;height:100%;border:none;display:block;}
+.gm-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#000;z-index:2;transition:opacity .35s,visibility .35s;}
+.gm-loading.hide{opacity:0;visibility:hidden;}
+.gm-loading .gl-icon{font-size:36px;animation:glPulse .9s ease infinite;}
 @keyframes glPulse{0%,100%{transform:scale(1);opacity:.7;}50%{transform:scale(1.1);opacity:1;}}
-.game-loading .gl-text{font-family:'Orbitron',sans-serif;font-size:13px;color:var(--acc);letter-spacing:.15em;text-transform:uppercase;}
-.game-loading .gl-sub{font-size:11px;color:var(--txt2);font-family:'Share Tech Mono',monospace;}
-.game-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.gm-loading .gl-text{font-family:'Orbitron',sans-serif;font-size:12px;color:var(--acc);letter-spacing:.15em;text-transform:uppercase;}
+.gm-loading .gl-sub{font-size:10px;color:var(--txt2);font-family:'Share Tech Mono',monospace;}
 
 /* ─── UPDATES ─── */
 .update-item{border-left:3px solid var(--acc);padding:0 0 0 18px;margin-bottom:22px;position:relative;}
@@ -509,22 +523,32 @@ body.unlocked.cursor-on #cursor{display:block;}
 
     <!-- ═══ GAME ═══ -->
     <section class="section" id="sec-game">
-      <div class="sec-head"><h2>Game Room</h2><p>Play directly in the dashboard</p></div>
-      <div class="game-wrap">
-        <div class="game-container" id="gameContainer">
-          <div class="game-loading" id="gameLoading">
-            <div class="gl-icon">🎮</div>
-            <div class="gl-text">Loading Game…</div>
-            <div class="gl-sub">Five Nights at Freddy's: Sister Location</div>
-          </div>
-          <!-- iframe injected by JS on first visit -->
-        </div>
-        <div class="game-bar">
-          <button class="tool-btn" id="gameFullscreen" style="flex:none;padding:9px 20px;">⛶ Fullscreen</button>
-          <button class="tool-btn sec" id="gameReload" style="flex:none;padding:9px 20px;">↻ Reload</button>
-        </div>
+      <div class="sec-head"><h2>Game Room</h2><p>Pick a game to play</p></div>
+      <div class="game-grid" id="gameGrid">
+        <!-- tiles injected by JS -->
       </div>
     </section>
+
+    <!-- Game Modal Player (shared) -->
+    <div class="gm-bg" id="gmBg"></div>
+    <div class="gm-modal" id="gmModal">
+      <div class="gm-head">
+        <h3 id="gmTitle">Game</h3>
+        <div class="gm-head-btns">
+          <button class="gm-btn" id="gmReload" title="Reload">↻</button>
+          <button class="gm-btn" id="gmFullscreen" title="Fullscreen">⛶</button>
+          <button class="gm-btn" id="gmClose" title="Close">✕</button>
+        </div>
+      </div>
+      <div class="gm-frame-wrap">
+        <div class="gm-loading" id="gmLoading">
+          <div class="gl-icon" id="gmLoadIcon">🎮</div>
+          <div class="gl-text">Loading…</div>
+          <div class="gl-sub" id="gmLoadSub"></div>
+        </div>
+        <iframe id="gmIframe" src="" allow="autoplay"></iframe>
+      </div>
+    </div>
 
     <!-- ═══ UPDATES ═══ -->
     <section class="section" id="sec-updates">
@@ -659,7 +683,7 @@ function showSec(id){
   if(id==='tools')initTools();
   if(id==='hub')buildProxies();
   if(id==='dash'){renderFavRow();updateRing();renderFeed();}
-  if(id==='game')initGame();
+  if(id==='game')buildGameGrid();
 }
 $$('.bar-item[data-sec]').forEach(btn=>btn.addEventListener('click',()=>showSec(btn.dataset.sec)));
 
@@ -841,29 +865,58 @@ function initTools(){
 }
 
 /* ─── GAME ─── */
-let gameInited=false;
-function initGame(){
-  if(gameInited)return;
-  gameInited=true;
-  const container=$('#gameContainer');
-  const iframe=document.createElement('iframe');
-  iframe.src='https://cdn.jsdelivr.net/gh/genizy/fnaf@main/sl/index.html';
-  iframe.setAttribute('allow','autoplay');
-  iframe.style.cssText='width:100%;aspect-ratio:16/9;border:none;display:block;';
-  iframe.onload=()=>{setTimeout(()=>$('#gameLoading').classList.add('hide'),800);};
-  container.appendChild(iframe);
-  // Fullscreen button
-  $('#gameFullscreen').addEventListener('click',()=>{
-    if(iframe.requestFullscreen)iframe.requestFullscreen().then(()=>toast('Fullscreen on','ok')).catch(()=>toast('Not supported','err'));
-    else toast('Not supported','err',1400);
-  });
-  // Reload button
-  $('#gameReload').addEventListener('click',()=>{
-    iframe.src=iframe.src;
-    $('#gameLoading').classList.remove('hide');
-    toast('Reloading game…','ok',1600);
-  });
+const GAMES=[
+  {id:'fnaf-sl',icon:'🎮',name:'FNAF Sister Location',tag:'horror',url:'https://cdn.jsdelivr.net/gh/genizy/fnaf@main/sl/index.html'}
+];
+function buildGameGrid(){
+  $('#gameGrid').innerHTML=GAMES.map(g=>`<div class="game-tile" data-url="${g.url}" data-name="${g.name}" data-icon="${g.icon}"><div class="gt-icon">${g.icon}</div><div class="gt-name">${g.name}</div><div class="gt-tag">${g.tag}</div></div>`).join('');
+  $$('.game-tile').forEach(t=>t.classList.remove('active'));
+  $$('.game-tile').forEach(tile=>tile.addEventListener('click',()=>{tile.classList.add('active');openGame(tile.dataset);}));
 }
+function openGame({url,name,icon}){
+  $('#gmTitle').textContent=name;
+  $('#gmLoadIcon').textContent=icon;
+  $('#gmLoadSub').textContent=name;
+  $('#gmLoading').classList.remove('hide');
+  $('#gmIframe').src='';
+  $('#gmBg').classList.add('show');
+  $('#gmModal').classList.add('show');
+  // Fetch HTML and serve as blob so MIME is always text/html (fixes raw-source bug on GitHub Pages)
+  fetch(url).then(r=>r.text()).then(html=>{
+    // Rewrite relative resource paths to absolute CDN URLs so CSS/JS/assets load correctly
+    const base=url.substring(0,url.lastIndexOf('/')+1);
+    const rewritten=html.replace(/<base\s[^>]*>/i,'').replace(/(src|href)=["'](?!https?:\/\/)([^"']+)["']/gi,(m,attr,path)=>`${attr}="${base}${path}"`);
+    const blob=new Blob([rewritten],{type:'text/html'});
+    $('#gmIframe').src=URL.createObjectURL(blob);
+  }).catch(()=>{$('#gmLoadSub').textContent='Failed to load — check your connection';});
+}
+function closeGame(){
+  $('#gmBg').classList.remove('show');
+  $('#gmModal').classList.remove('show');
+  // Revoke blob URL to free memory
+  const src=$('#gmIframe').src;
+  if(src.startsWith('blob:'))URL.revokeObjectURL(src);
+  $('#gmIframe').src='';
+}
+$('#gmIframe').addEventListener('load',()=>{setTimeout(()=>$('#gmLoading').classList.add('hide'),600);});
+$('#gmClose').addEventListener('click',closeGame);
+$('#gmBg').addEventListener('click',closeGame);
+$('#gmReload').addEventListener('click',()=>{
+  $('#gmLoading').classList.remove('hide');
+  const src=$('#gmIframe').src;
+  if(src.startsWith('blob:'))URL.revokeObjectURL(src);
+  $('#gmIframe').src='';
+  // Re-trigger load from the currently active game
+  const tile=document.querySelector('.game-tile.active');
+  if(tile)openGame(tile.dataset);
+});
+$('#gmFullscreen').addEventListener('click',()=>{
+  const f=$('#gmIframe');
+  if(f.requestFullscreen)f.requestFullscreen().catch(()=>{});
+  else if(f.mozRequestFullScreen)f.mozRequestFullScreen();
+  else if(f.webkitRequestFullscreen)f.webkitRequestFullscreen();
+  else if(f.msRequestFullscreen)f.msRequestFullscreen();
+});
 
 /* ─── FAB ─── */
 $('#fab').addEventListener('click',function(){const m=$('#qmenu');m.classList.toggle('show');this.textContent=m.classList.contains('show')?'✕':'⚡';});
