@@ -568,6 +568,7 @@ body.unlocked.cursor-on #cursor{display:block;}
     <!-- ═══ GAME ═══ -->
     <section class="section" id="sec-game">
       <div class="sec-head"><h2>Game Room</h2><p>Pick a game to play</p></div>
+      <div class="search-wrap" id="gameSearchWrap"><div class="search-inner"><span class="si">🔍</span><input type="text" id="gameSearchInput" placeholder="filter games..."><button id="gameSearchClear">✕</button></div></div>
       <div class="game-grid" id="gameGrid"></div>
     </section>
 
@@ -726,21 +727,18 @@ function initNebula(){
   function resize(){w=c.width=innerWidth;h=c.height=innerHeight;}
   resize();addEventListener('resize',resize);
 
-  // Nebula layers: drifting color clouds + floating particles
+  // Nebula layers: drifting color clouds + floating particles (optimized)
   const clouds=[
-    {cx:0.2,cy:0.3,r:0.35,hue:200,sat:60,lit:12,dx:0.00015,dy:0.00008},
-    {cx:0.8,cy:0.7,r:0.4,hue:260,sat:50,lit:10,dx:-0.0001,dy:0.00012},
-    {cx:0.5,cy:0.5,r:0.3,hue:180,sat:40,lit:8,dx:0.00008,dy:-0.00015},
-    {cx:0.15,cy:0.75,r:0.25,hue:230,sat:55,lit:9,dx:0.00012,dy:-0.00006},
-    {cx:0.85,cy:0.2,r:0.3,hue:190,sat:45,lit:11,dx:-0.00014,dy:0.0001}
+    {cx:0.3,cy:0.4,r:0.4,hue:200,sat:50,lit:10,dx:0.00008,dy:0.00005},
+    {cx:0.7,cy:0.6,r:0.35,hue:220,sat:40,lit:8,dx:-0.00006,dy:0.00008}
   ];
   const particles=[];
-  for(let i=0;i<90;i++)particles.push({
+  for(let i=0;i<30;i++)particles.push({
     x:Math.random(),y:Math.random(),
-    r:Math.random()*1.5+0.3,
-    s:Math.random()*.03+.005,
-    hue:180+Math.random()*60,
-    bright:Math.random()*.6+.3
+    r:Math.random()*1+0.5,
+    s:Math.random()*.02+.008,
+    hue:180+Math.random()*40,
+    bright:Math.random()*.4+.3
   });
 
   function draw(){
@@ -804,9 +802,11 @@ function showSec(id){
   if(id==='tools')initTools();
   if(id==='hub')buildProxies();
   if(id==='dash'){renderFavRow();updateRing();renderFeed();}
-  if(id==='game')buildGameGrid();
+  if(id==='game'){$('#gameSearchWrap').classList.add('visible');buildGameGrid();}
 }
 $$('.bar-item[data-sec]').forEach(btn=>btn.addEventListener('click',()=>showSec(btn.dataset.sec)));
+$('#gameSearchInput').addEventListener('input',()=>buildGameGrid());
+$('#gameSearchClear').addEventListener('click',()=>{$('#gameSearchInput').value='';buildGameGrid();});
 
 /* ─── SETTINGS ─── */
 let autohideEnabled=true;
@@ -1106,15 +1106,16 @@ function initTools(){
 
 /* ─── GAME ─── */
 const GAMES=[
-  {id:'fnaf-sl',icon:'🎮',name:'FNAF Sister Location',tag:'horror',cat:'horror',url:'https://cdn.jsdelivr.net/gh/genizy/fnaf@main/sl/index.html',type:'fetch'},
   {id:'car-survival',icon:'🚗',name:'Car Survival 3D',tag:'action',cat:'action',url:'https://rawcdn.githack.com/genizy/brainrot/main/car-survival-3d/index.html',type:'direct'},
   {id:'build-plane',icon:'✈️',name:'Build a Plane',tag:'adventure',cat:'adventure',url:'https://rawcdn.githack.com/genizy/brainrot/main/build-a-plane/index.html',type:'direct'},
-  {id:'basket-random',icon:'🏀',name:'Basket Random',tag:'sports',cat:'sports',url:'https://cdn.jsdelivr.net/gh/bubbls/ruffle@1520d90d7b2994737acd8f7a633d018f63c22ca7/index.html',type:'direct'},
-  {id:'baldi',icon:'📚',name:"Baldi's Basics Plus",tag:'adventure',cat:'adventure',url:'https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/index.html',type:'direct'}
+  {id:'block-blast',icon:'🧩',name:'Block Blast Puzzle',tag:'puzzle',cat:'adventure',url:'https://cdn.jsdelivr.net/gh/genizy/bl/index.html',type:'fetch'},
+  {id:'attack-hole',icon:'🕳️',name:'Attack Hole',tag:'action',cat:'action',url:'https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@8c0add17e99e4cbe9eaf6bb9e7487c3ad08c915a/attack-hole/index.html',type:'fetch'}
 ];
 
 function buildGameGrid(){
-  $('#gameGrid').innerHTML=GAMES.map(g=>`<div class="game-tile" data-url="${g.url}" data-name="${g.name}" data-icon="${g.icon}" data-cat="${g.cat}" data-type="${g.type}"><div class="gt-icon">${g.icon}</div><div class="gt-name">${g.name}</div><div class="gt-tag">${g.tag}</div></div>`).join('');
+  const grid=$('#gameGrid'),q=$('#gameSearchInput').value.toLowerCase();
+  let filtered=GAMES.filter(g=>g.name.toLowerCase().includes(q)||g.tag.toLowerCase().includes(q));
+  grid.innerHTML=filtered.map(g=>`<div class="game-tile" data-url="${g.url}" data-name="${g.name}" data-icon="${g.icon}" data-cat="${g.cat}" data-type="${g.type}"><div class="gt-icon">${g.icon}</div><div class="gt-name">${g.name}</div><div class="gt-tag">${g.tag}</div></div>`).join('');
   $$('.game-tile').forEach(tile=>tile.addEventListener('click',()=>openGame(tile.dataset)));
   if(window._rebindHover)window._rebindHover();
 }
