@@ -1746,6 +1746,202 @@ const GAME_HTML={
     <script type="text/javascript" src="🗿.js?v=8a" charset="UTF-8"><\\/script>
     <script type="text/javascript" src="▶.js?v=8a" charset="UTF-8"><\\/script>
     <script type="text/javascript" src="💾.js?v=8a" charset="UTF-8"><\\/script>
+</html>`,
+  soundboard:`<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/genizy/soundboard@main/">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"><\\/script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-"><\\/script>
+    
+    <meta charset="UTF-8">
+    <title>Soundboard</title>
+    <script src="sounds.js" type="module"><\\/script>
+    <script src="main.js" type="module"><\\/script>
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="controls">
+        <button id="toggleFavorites" class="control-button favorites-toggle">⭐ Favorites: OFF</button>
+        <button id="toggleButton" class="control-button overlap-toggle">🔇 Overlap: OFF</button>
+        <button id="stopButton" class="control-button stop-button">⏹️ Stop All Sounds</button>
+        <input id="searchInput" type="text" placeholder="Search sounds...">
+    </div>
+    <div id="soundboard"></div>
+</body>
+
+</html>`,
+  polytrack:`<!doctype html>
+<html>
+
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/genizy/polytrack@latest/">
+    <script>
+        window.jkdfgnjkndfg = document.querySelector('base').href;
+        fetch("simulation_worker.bundle.js").then(res => res.text()).then(text => {
+            const blob = new Blob([text.replaceAll("replacethisplease", window.jkdfgnjkndfg)], {
+                type: 'application/javascript'
+            });
+            window.simulationworker = URL.createObjectURL(blob);
+        });
+        const ogworker = window.Worker;
+        window.Worker = function (scriptUrl, options) {
+            if (typeof scriptUrl === 'string' && scriptUrl.toLowerCase() === "simulation_worker.bundle.js") {
+                const wrapper = {};
+                    const actualWorker = new ogworker(window.simulationworker, options);
+                    Object.assign(wrapper, actualWorker);
+                    if (typeof wrapper.onmessage === 'function') {
+                        actualWorker.onmessage = wrapper.onmessage;
+                    }
+                    return actualWorker;
+                return new Proxy(wrapper, {
+                    get(target, prop) {
+                        return (...args) => {
+                            promise.then(realWorker => realWorker[prop](...args));
+                        };
+                    },
+                    set(target, prop, value) {
+                        promise.then(realWorker => {
+                            realWorker[prop] = value;
+                        });
+                        return true;
+                    }
+                });
+            }
+            return new ogworker(scriptUrl, options);
+        };
+        window.Worker.prototype = ogworker.prototype;
+        const ogfetch = window.fetch;
+        window.fetch = async function (input, init) {
+            if (typeof input === "string") {
+                input = input.replace("vps.kodub.com", "vpskodub.tmena1565.workers.dev");
+            } else if (input instanceof Request) {
+                const newUrl = input.url.replace("vps.kodub.com", "vpskodub.tmena1565.workers.dev");
+                input = new Request(newUrl, input);
+            }
+            return ogfetch(input, init);
+        };
+        const ogxml = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+            if (typeof url === "string") {
+                url = url.replace("vps.kodub.com", "vpskodub.tmena1565.workers.dev");
+            }
+            return ogxml.call(this, method, url, ...rest);
+        };
+    <\\/script>
+    <meta charset="utf-8">
+    <link rel="preload" href="forced_square.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href="images/logo.svg" as="image" type="image/svg+xml" />
+    <link rel="preload" href="images/discord.svg" as="image" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+    <script defer="defer" src="error_screen.bundle.js"><\\/script>
+    <script defer="defer" src="main.bundle.js"><\\/script>
+</head>
+
+<body><canvas id="screen"></canvas>
+    <div id="ui"></div>
+    <div id="transition-layer"></div>
+</body>
+
+</html>`,
+  forkNSausage:`<!doctype html>
+<html>
+
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/fork-n-sausage/">
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/ytgame.js" nonce="BULoIZJ58FW0lVukkm50Ng"><\\/script>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ForkNSausage</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css" nonce="BULoIZJ58FW0lVukkm50Ng">
+  </head>
+  <body class="light">
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas"></canvas>
+    </div>
+    <div id="loading-cover" style="display:none;">
+      <div id="unity-loading-bar">
+        <div id="unity-logo"><img src="logo.png"></div>
+        <div id="unity-progress-bar-empty" style="display: none;">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <div id="unity-fullscreen-button" style="display: none;"></div>
+    <script nonce="BULoIZJ58FW0lVukkm50Ng">
+      const hideFullScreenButton = true;
+      const buildUrl = "Build";
+      const loaderUrl = buildUrl + "/fork-n-sausage-v2022.3.18f1-store-v1_0_1-build206.loader.js";
+      const config = {
+        dataUrl: buildUrl + "/0b7f455b59d283525d729ac5aa2fd2ff.data.br",
+        frameworkUrl: buildUrl + "/240d6ad20e88a3724e7b596483ebf4b5.js",
+        codeUrl: buildUrl + "/a6b676e3da30e3cb2825978173dab48c.wasm.br",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Kadka",
+        productName: "ForkNSausage",
+        productVersion: "1.0.1",
+      };
+
+      const container = document.querySelector("#unity-container");
+      const canvas = document.querySelector("#unity-canvas");
+      const loadingCover = document.querySelector("#loading-cover");
+      const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+      const progressBarFull = document.querySelector("#unity-progress-bar-full");
+      const fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      const spinner = document.querySelector('.spinner');
+
+      const canFullscreen = (function() {
+        for (const key of [
+            'exitFullscreen',
+            'webkitExitFullscreen',
+            'webkitCancelFullScreen',
+            'mozCancelFullScreen',
+            'msExitFullscreen',
+          ]) {
+          if (key in document) {
+            return true;
+          }
+        }
+        return false;
+      }());
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = Math.min(config.devicePixelRatio, 2);
+      }
+      loadingCover.style.display = "";
+
+      const script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          spinner.style.display = "none";
+          progressBarEmpty.style.display = "";
+          progressBarFull.style.width = \`\${100 * progress}%\`;
+        }).then((unityInstance) => {
+          loadingCover.style.display = "none";
+          if (canFullscreen) {
+            if (!hideFullScreenButton) {
+              fullscreenButton.style.display = "";
+            }
+            fullscreenButton.onclick = () => {
+              unityInstance.SetFullscreen(1);
+            };
+          }
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    <\\/script>
+  </body>
 </html>`
 };
 
@@ -1753,7 +1949,10 @@ const GAMES=[
   {id:'car-survival',icon:'🚗',name:'Car Survival 3D',tag:'action',cat:'action',url:'https://rawcdn.githack.com/genizy/brainrot/main/car-survival-3d/index.html',type:'direct'},
   {id:'build-plane',icon:'✈️',name:'Build a Plane',tag:'adventure',cat:'adventure',url:'https://rawcdn.githack.com/genizy/brainrot/main/build-a-plane/index.html',type:'direct'},
   {id:'climbing',icon:'🧗',name:'A Difficult Game About Climbing',tag:'platformer',cat:'adventure',type:'inline',html:GAME_HTML.climbing},
-  {id:'thirty-dollar',icon:'🗿',name:"Don't You Lecture Me",tag:'music',cat:'adventure',type:'inline',html:GAME_HTML.thirtyDollar}
+  {id:'thirty-dollar',icon:'🗿',name:"Don't You Lecture Me",tag:'music',cat:'adventure',type:'inline',html:GAME_HTML.thirtyDollar},
+  {id:'soundboard',icon:'🔊',name:'Soundboard',tag:'audio',cat:'adventure',type:'inline',html:GAME_HTML.soundboard},
+  {id:'polytrack',icon:'🏎️',name:'PolyTrack',tag:'racing',cat:'action',type:'inline',html:GAME_HTML.polytrack},
+  {id:'fork-n-sausage',icon:'🍴',name:'ForkNSausage',tag:'puzzle',cat:'adventure',type:'inline',html:GAME_HTML.forkNSausage}
 ];
 
 let currentGame=null;
