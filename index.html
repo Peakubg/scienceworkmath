@@ -24,15 +24,36 @@ body{background:var(--bg);color:var(--txt);}
 #disguise{position:fixed;inset:0;z-index:99999;background:#f4f6f9;overflow-y:auto;font-family:Georgia,serif;transition:opacity .5s,transform .5s;}
 #disguise.hide{opacity:0;transform:scale(1.03);pointer-events:none;}
 body.unlocked #disguise{display:none;}
-.edu-wrap{max-width:960px;margin:0 auto;padding:48px 24px;}
-.edu-head{text-align:center;border-bottom:2px solid #c8d6e5;padding-bottom:24px;margin-bottom:36px;}
-.edu-head h1{font-size:34px;color:#2c5aa0;margin-bottom:6px;}
-.edu-head p{color:#7a8a9e;font-size:16px;}
-.edu-grid{display:grid;grid-template-columns:2fr 1fr;gap:28px;}
-.edu-card{background:#fff;border-radius:10px;padding:28px;box-shadow:0 2px 12px rgba(0,0,0,.07);}
-.edu-card h2{color:#2c5aa0;margin-bottom:10px;font-size:20px;}
-.edu-card p{color:#5a6a7a;line-height:1.7;font-size:15px;}
-#secret-trigger{background:#eef4fb;border:1.5px solid #b8d0e8;border-radius:8px;padding:20px;cursor:pointer;transition:background .25s,border-color .25s,box-shadow .25s;}
+#disguise .edu-wrap{max-width:1100px;margin:0 auto;padding:36px 22px 64px;}
+.edu-topbar{display:flex;justify-content:space-between;align-items:center;font-family:Arial,sans-serif;font-size:12px;color:#6b7c8f;margin-bottom:10px;}
+.edu-topbar span{display:flex;gap:10px;align-items:center;}
+.edu-topbar a{color:#2c5aa0;text-decoration:none;}
+.edu-header{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:18px 22px;display:flex;align-items:center;gap:18px;margin-bottom:18px;border:1px solid #d9e4f2;}
+.edu-logo{width:54px;height:54px;border-radius:12px;background:#2c5aa0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-family:Arial,sans-serif;font-weight:700;}
+.edu-brand h1{font-size:26px;color:#223a63;margin:0;font-family:'Trebuchet MS',sans-serif;}
+.edu-brand p{color:#6a7a8a;font-size:14px;margin:4px 0 0;}
+.edu-nav{display:flex;gap:14px;margin-left:auto;flex-wrap:wrap;}
+.edu-nav a{color:#2c5aa0;font-weight:600;font-size:13px;text-decoration:none;padding:6px 10px;border-radius:6px;}
+.edu-nav a:hover{background:#eef4fb;}
+.edu-hero{background:linear-gradient(135deg,#eaf2fb,#f6f9fd);border:1px solid #d7e3f3;border-radius:12px;padding:22px;margin-bottom:18px;display:grid;grid-template-columns:2fr 1fr;gap:20px;}
+.edu-hero h2{color:#223a63;font-size:22px;margin-bottom:8px;font-family:'Trebuchet MS',sans-serif;}
+.edu-hero p{color:#5a6a7a;font-size:14px;line-height:1.6;}
+.edu-hero .hero-meta{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#6a7a8a;}
+.edu-hero .hero-meta span{background:#fff;border:1px solid #d6e2f0;padding:6px 10px;border-radius:20px;}
+.edu-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;}
+.edu-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.07);border:1px solid #e1e9f5;}
+.edu-card h3{color:#223a63;margin-bottom:10px;font-size:18px;font-family:'Trebuchet MS',sans-serif;}
+.edu-card p{color:#5a6a7a;line-height:1.6;font-size:14px;}
+.edu-list{display:grid;gap:10px;margin-top:10px;}
+.edu-list-item{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid #e1e9f5;border-radius:10px;background:#f9fbff;font-size:13px;color:#4c5b6a;}
+.edu-list-item strong{color:#223a63;}
+.edu-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px;}
+.edu-table th,.edu-table td{border-bottom:1px solid #e1e9f5;padding:8px 6px;text-align:left;color:#526272;}
+.edu-table th{color:#223a63;font-weight:700;font-size:12px;}
+.edu-links{display:grid;gap:8px;margin-top:12px;}
+.edu-links a{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:8px;border:1px solid #d9e4f2;color:#2c5aa0;text-decoration:none;font-size:13px;background:#f5f9ff;}
+.edu-links a:hover{background:#e9f2ff;}
+#secret-trigger{background:#eef4fb;border:1.5px solid #b8d0e8;border-radius:10px;padding:16px;cursor:pointer;transition:background .25s,border-color .25s,box-shadow .25s;}
 #secret-trigger:hover{background:#e4edf7;border-color:#7bafd4;box-shadow:0 0 12px rgba(44,90,160,.15);}
 #secret-trigger h4{color:#2c5aa0;margin-bottom:6px;font-size:15px;}
 #secret-trigger p{color:#6a7a8a;font-size:13px;margin:0;}
@@ -392,7 +413,10 @@ body.unlocked.cursor-on #cursor{display:block;}
   .w-grid2{grid-template-columns:1fr;}
   .p-grid{grid-template-columns:1fr;}
   .bar-item{width:44px;height:44px;font-size:18px;}
+  .edu-hero{grid-template-columns:1fr;}
   .edu-grid{grid-template-columns:1fr;}
+  .edu-header{flex-direction:column;align-items:flex-start;}
+  .edu-nav{width:100%;justify-content:flex-start;}
   .keys-grid{grid-template-columns:1fr;}
   .game-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}
 }
@@ -403,14 +427,75 @@ body.unlocked.cursor-on #cursor{display:block;}
 <!-- DISGUISE -->
 <div id="disguise">
   <div class="edu-wrap">
-    <header class="edu-head"><h1>Student Learning Portal</h1><p>Comprehensive Educational Resources & Tools</p></header>
-    <div class="edu-grid">
-      <div class="edu-card"><h2>Welcome Back</h2><p>Access your curated learning materials, study tools, and interactive resources. Use the sidebar to navigate between subjects and track your progress throughout the semester.</p></div>
-      <aside><div class="edu-card" style="padding:20px;">
-        <h4 style="color:#2c5aa0;margin-bottom:8px;font-size:15px;">📊 Interactive Tools</h4>
-        <p style="color:#6a7a8a;font-size:13px;margin-bottom:14px;">Launch your study session below.</p>
+    <div class="edu-topbar">
+      <span>District Portal • Week of March 18</span>
+      <span><a href="#">Parent Portal</a>•<a href="#">Attendance</a>•<a href="#">Help Desk</a></span>
+    </div>
+    <div class="edu-header">
+      <div class="edu-logo">HS</div>
+      <div class="edu-brand">
+        <h1>Hillside Secondary School</h1>
+        <p>Student Learning Portal • Powered by Hillside ISD</p>
+      </div>
+      <nav class="edu-nav">
+        <a href="#">Dashboard</a>
+        <a href="#">Classes</a>
+        <a href="#">Assignments</a>
+        <a href="#">Library</a>
+        <a href="#">Counseling</a>
+      </nav>
+    </div>
+    <section class="edu-hero">
+      <div>
+        <h2>Welcome back, Scholars!</h2>
+        <p>Check today’s announcements, view your schedule, and access classroom tools. Stay on track with upcoming deadlines and progress checkpoints.</p>
+        <div class="hero-meta">
+          <span>🔔 3 New Announcements</span>
+          <span>📚 5 Classes Today</span>
+          <span>🗓️ 2 Assignments Due</span>
+        </div>
+      </div>
+      <div class="edu-card" style="margin:0;">
+        <h3>Quick Launch</h3>
+        <p>Open your study session or access the learning workspace.</p>
         <div id="secret-trigger"><h4>▶ Begin Session</h4><p>Click to initialize your workspace</p><div class="edu-dots"><span></span><span></span><span></span></div></div>
-      </div></aside>
+      </div>
+    </section>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <h3>Announcements</h3>
+        <div class="edu-list">
+          <div class="edu-list-item"><strong>Science Fair</strong><span>Project outlines due Friday.</span></div>
+          <div class="edu-list-item"><strong>Spring Assembly</strong><span>Auditorium • 1:30 PM.</span></div>
+          <div class="edu-list-item"><strong>Library Hours</strong><span>Open until 6:00 PM.</span></div>
+        </div>
+        <h3 style="margin-top:18px;">Upcoming Schedule</h3>
+        <table class="edu-table">
+          <thead>
+            <tr><th>Period</th><th>Course</th><th>Room</th><th>Time</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>AP Biology</td><td>Lab 204</td><td>8:10 AM</td></tr>
+            <tr><td>2</td><td>World History</td><td>Room 112</td><td>9:25 AM</td></tr>
+            <tr><td>3</td><td>Algebra II</td><td>Room 310</td><td>10:45 AM</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <aside>
+        <div class="edu-card">
+          <h3>Quick Links</h3>
+          <div class="edu-links">
+            <a href="#"><span>Classroom Pages</span><span>›</span></a>
+            <a href="#"><span>Submit Assignment</span><span>›</span></a>
+            <a href="#"><span>Lunch Menu</span><span>›</span></a>
+            <a href="#"><span>Tech Support</span><span>›</span></a>
+          </div>
+        </div>
+        <div class="edu-card" style="margin-top:16px;">
+          <h3>Study Reminder</h3>
+          <p>Set aside 20 minutes for independent reading. Check your planner for upcoming assessments.</p>
+        </div>
+      </aside>
     </div>
   </div>
 </div>
